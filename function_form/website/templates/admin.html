@@ -175,9 +175,6 @@
 {% endif %}
 
 
-
-
-
 {% if function != 'none' %}
 
 {% for f in function %}
@@ -196,6 +193,7 @@
     <h5 style="text-align:left;">Ending Time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.time_duration_end }}</h5>
 		<h5 style="text-align:left;">Chief Guest&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.chief_guest_name }}</h5>
 		<h5 style="text-align:left;">Organizer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.organizer_name }}</h5>
+    <h5 style="text-align:left;">Organizer mail&nbsp;&nbsp;: {{ f.organizer_mail_id }}</h5>
 		<h5 style="text-align:left;">Contact&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.organizer_contact }}</h5>
 		
     <form action="/download" method="POST">
@@ -203,6 +201,11 @@
       <input type="hidden" id="func_name" name="func_name" value="{{f.func_name}}">
     <p>Click here to download the form  <button class="btn btn-primary btn-sm" type="submit">Download</button></p>    
   </form>
+  <form action="" method="POST">
+    {% csrf_token %}
+    <p>Need changes ? <button class="btn btn-warning btn-sm" type="submit">Edit</button></p>
+  </form>
+  
   </div>
 
     

@@ -30,6 +30,8 @@ class booking_model(models.Model):
     booking_date = models.DateField()
     starting_time = models.TimeField()
     ending_time = models.TimeField()
+    duration = models.IntegerField(null=True)
+    days = models.IntegerField(null=True)
     status = models.CharField(max_length=25,null=True)
     
 
