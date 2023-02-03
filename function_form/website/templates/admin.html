@@ -258,6 +258,861 @@
 
 
 
+<!-- Form for editting begin -->
+
+
+{% if view_form == 'view' %}
+
+      <div class="px-5 my-5 " text-white style="width:60rem;margin:0 auto;">
+
+        <div class="card border-dark mb-3">
+          <h5 class="card-header">General details</h5>
+          <div class="card-body">
+
+
+
+            <div class="mb-3">
+              <label for="func_date" class="for">Date</label>
+              <input disabled type="date" class="form-control mb-3" Name="func_date" value={{date}}>
+            </div>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#staticBackdrop">
+              Check availability
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog"
+              aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Check venue availability</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form class="form was-validated" action={% url 'check_availability' %} method="POST">
+                      {% csrf_token %}
+                      <div class="mb-3">
+                        <label for="func_date" class="for">Date</label>
+                        <input type="date" class="form-control mb-3" Name="func_date_check" required>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Choose date</div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="time_duration_start_check" class="form-label">Starting time</label>
+                        <input type="time" class="form-control" Name="time_duration_start_check" required>
+                        <div class="valid-feedback">Good time!</div>
+                        <div class="invalid-feedback">Choose time in 24-hours format</div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="time_duration_end_check" class="form-label">Ending time</label>
+                        <input type="time" class="form-control" Name="time_duration_end_check" required>
+                        <div class="valid-feedback">Good time!</div>
+                        <div class="invalid-feedback">Choose time in 24-hours format</div>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <input type="hidden" id="mail_id" name="mail_id" value={{mailid}}>
+                    <button type="submit" class="btn btn-primary">Get venue</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <form class="form was-validated" action={% url 'submit' %} method="POST">
+
+              {% csrf_token %}
+              <div class=" mb-3">
+                <label for="venue" class="form-label">Select your venue</label>
+                <select class="shadow form-select custom-select rounded" name="venue" id="venue" required>
+                  <option value="">- - - - - - - - - -</option>
+                  {% for v in venue %}
+                  <option value="{{ v }}">{{v}}</option>
+                  {% endfor %}
+                </select>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Choose venue</div>
+
+              </div>
+
+              <div class="mb-3">
+                {% if date != None %}
+                <input type="hidden" class="form-control mb-3" id="func_date" name="func_date" value="{{ date }}">
+                <input type="hidden" class="form-control" id="time_duration_func_start" name="time_duration_func_start"
+                  value="{{ start_time }}">
+                <input type="hidden" class="form-control" id="time_duration_func_end" name="time_duration_func_end"
+                  value="{{ end_time }}">
+                {% endif %}
+                <label for="func_days" class="form-label">Number of days</label>
+                <input type="number" class="form-control" name="func_days" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of days</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="time_duration_start" class="form-label">Starting time</label>
+                <input disabled type="time" class="form-control" id="time_duration_func_start"
+                  name="time_duration_func_start" value="{{ start_time }}">
+
+              </div>
+
+              <div class="mb-3">
+                <label for="time_duration_end" class="form-label">Ending time</label>
+                <input disabled type="time" class="form-control" id="time_duration_func_end"
+                  name="time_duration_func_end" value="{{ end_time }}">
+              </div>
+
+
+              <div class="mb-3">
+                <label for="Name" class="form-label">Select your department</label>
+                <select class="shadow form-select custom-select rounded" name="department" id="department" required>
+                  <option value="">- - - - - - -</option>
+                  <option value="AI & DS">AI & DS</option>
+                  <option value="BME">BME</option>
+                  <option value="CSE">CSE</option>
+                  <option value="CSBS">CSBS</option>
+                  <option value="Civil">Civil</option>
+                  <option value="ECE">ECE</option>
+                  <option value="EEE">EEE</option>
+                  <option value="Mechanical">Mechanical</option>
+                  <option value="IT">IT</option>
+                  <option value="MBA">MBA</option>
+                </select>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Choose department</div>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="func_name" class="form-label">Name of the function</label>
+                <input type="text" class="form-control" Name="func_name" id="function_name" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter name of the function</div>
+              </div>
+
+
+
+
+              <div class="mb-3">
+                <label for="training_type" class="form-label">Type of training</label>
+                <input required type="text" class="form-control" Name="train_type">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter type of training</div>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="func_students" class="form-label">Number of students</label>
+                <input required type="number" class="form-control" Name="func_students">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of students</div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label for="func_students_year">Year of Students</label>
+                  <select class="shadow form-select custom-select rounded" name="func_students_year"
+                    id="func_students_year" required>
+                    <option value="">- - - - - - -</option>
+                    <option value="I">I</option>
+                    <option value="II">II</option>
+                    <option value="III">III</option>
+                    <option value="IV">IV</option>
+                  </select>
+                  <div class="valid-feedback">Looks good!</div>
+                  <div class="invalid-feedback">Choose year</div>
+                </div>
+
+                <div class="form-group col-md-4">
+                  <label for="func_students_dept">Students department</label>
+                  <select class="shadow form-select custom-select rounded" name="func_students_dept"
+                    id="func_students_dept" required>
+                    <option value="">- - - - - - -</option>
+                    <option value="AI & DS">AI & DS</option>
+                    <option value="BME">BME</option>
+                    <option value="CSE">CSE</option>
+                    <option value="CSBS">CSBS</option>
+                    <option value="Civil">Civil</option>
+                    <option value="ECE">ECE</option>
+                    <option value="EEE">EEE</option>
+                    <option value="Mechanical">Mechanical</option>
+                    <option value="IT">IT</option>
+                    <option value="MBA">MBA</option>
+                  </select>
+                  <div class="valid-feedback">Looks good!</div>
+                  <div class="invalid-feedback">Choose department</div>
+                </div>
+
+                <div class="form-group col-md-4">
+                  <label for="func_students_class">Students class</label>
+                  <select class="shadow form-select custom-select rounded" name="func_students_class"
+                    id="func_students_class" required>
+                    <option value="">- - - - - - -</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="A & B">A & B</option>
+                  </select>
+                  <div class="valid-feedback">Looks good!</div>
+                  <div class="invalid-feedback">Choose class</div>
+                </div>
+              </div>
+
+              <div class="form-row">
+
+                <div class="form-group col-md-4">
+                  <label class="form-label">Transport required for students</label>
+                  <div class="custom-control custom-radio">
+                    <input class="form-check-input" type="radio" name="transport_students" id="transport_students"
+                      value="yes" onclick="transport_student(0)" required>
+                    <label class="form-check-label" for="transport_students">Yes</label>
+                  </div>
+                  <div class="custom-control custom-radio">
+                    <input class="form-check-input" type="radio" name="transport_students" id="transport_students"
+                      value="no" onclick="transport_student(1)" required>
+                    <label class="form-check-label" for="transport_students">No</label>
+                  </div>
+                </div>
+
+                
+                <!-- <div class="collapse"></div> -->
+                <div class="form-group col-md-4" id="transport_students_radio_stage">
+                  <label for="transport_students_stage" class="form-label">Name of stage </label>
+                  <input type="text" class="form-control" Name="transport_students_stage" id="transport_students_stage">
+                  <div class="valid-feedback">If yes,please fill out</div>
+                </div>
+
+                <div class="form-group col-md-4" id="transport_students_radio_student_number">
+                  <label for="transport_students_number" class="form-label">Number of students </label>
+                  <input type="number" class="form-control" Name="transport_students_number" id="transport_students_number">
+                  <div class="valid-feedback">If yes,please fill out</div>
+                </div>
+
+              </div>
+
+
+              <div class="mb-3">
+                <label for="chief_guest_name" class="form-label">Name of the chief guest</label>
+                <input required type="text" class="form-control" Name="chief_guest_name">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter name of the chief guest</div>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="designation" class="form-label">Designation</label>
+                <input required type="text" class="form-control" Name="designation">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter designation</div>
+              </div>
+
+
+              <div class="form-group">
+                <label for="field">Select field</label>
+                <select class="form-select custom-select rounded" id="field_type" name="field_type" required>
+                  <option value="">Choose...</option>
+                  <option value="College">College</option>
+                  <option value="Industry">Industry</option>
+                </select>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Choose field</div>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="organizer_name" class="form-label">Name of the organizer</label>
+                <input required type="text" class="form-control" Name="organizer_name">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter name of the organizer</div>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="organizer_contact" class="form-label">Contact number of the organizer</label>
+                <input required type="number" class="form-control" Name="organizer_contact">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter contact number of the organizer</div>
+              </div>
+
+          </div>
+        </div>
+
+
+        <div class="card border-dark my-3">
+          <h5 class="card-header">Guest House</h5>
+          <div class="card-body">
+
+            <div class="custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="guestHouse" id="guestHouse"
+                value="yes" onclick="guest_house(0)" required>
+              <label class="form-check-label" for="guestHouse">Yes</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="guestHouse" id="guestHouse"
+                value="no" onclick="guest_house(1)" required checked>
+              <label class="form-check-label" for="guestHouse">No</label>
+            </div>
+            
+
+
+            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#guest_house_pd"
+              aria-expanded="false" aria-controls="collapseExample">
+              Required
+            </a>-->
+
+
+            <div class="form was-validated collapse mb-3" id="guest_House"> 
+              <div class="form was-validated well" id="guest_House_PD">
+
+                <div class="mb-3" id="guest_house_p">
+                  <label for="guest_house_persons" id="guest_house_persons" class="form-label">Number of persons</label>
+                  <input type="text" class="form-control" id="guest_house_persons" name="guest_house_persons">
+                  <div class="valid-feedback">Enter if required</div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-4" id="guest_house_d">
+                    <label for="guest_house_days" id="guest_house_days" class="form-label">Number of days</label>
+                    <input type="number" class="form-control" id="guest_house_days" name="guest_house_days">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+
+                  <div class="form-group col-md-4" id="guest_house_from_date">
+                    <label for="guest_house_from_date" id="guest_house_from_date" class="form-label">From date</label>
+                    <input type="date" class="form-control" id="guest_house_from_date" name="guest_house_from_date">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+
+                  <div class="form-group col-md-4" id="guest_house_to_date">
+                    <label for="guest_house_to_date" id="guest_house_to_date" class="form-label">To date</label>
+                    <input type="date" class="form-control" id="guest_house_to_date" name="guest_house_to_date">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+
+
+        <div class="form card border-dark my-3">
+          <h5 class="card-header">Refreshment and Lunch</h5>
+          <div class="card-body">
+            <h5>Refreshment for guest</h5>
+
+            <div>
+            <div class="custom-control custom-radio">
+              <input class="form-check-input"  onclick="func_refreshment_guest(0)"  type="radio" name="refreshment_Guest" id="refreshment_Guest" value="Yes">
+              <label class="form-check-label" for="refreshment_Guest">Yes</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input class="form-check-input"  onclick="func_refreshment_guest(1)" type="radio" name="refreshment_Guest" id="refreshment_Guest" value="No" checked>
+              <label class="form-check-label" for="refreshment_Guest">No</label>
+            </div>
+            </div>
+
+
+              <div class="collapse ma-3" id="refreshment_guest_radio">
+
+                <div class="form form-row was-validated ">
+                  <div class="form-group col-md-6">
+                    <label for="refreshment_for_guest_number" class="form-label">Number of person</label>
+                    <input type="text" class="form-control" Name="refreshment_for_guest_number" id="r_guest_number">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label for="refreshment_for_guest_time" class="form-label">Required time</label>
+                    <input type="time" class="form-control" Name="refreshment_for_guest_time" id="r_guest_time">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+                </div>
+
+                <div class="form form-row was-validated ">
+                  <div class="form-group col-md-4">
+                    <label for="refresh_guest_tea">Tea</label>
+                    <input type="text" class="form-control" name="refreshment_guest_tea" id="refreshment_guest_tea">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="refresh_guest_coffee">Coffee</label>
+                    <input type="text" class="form-control" name="refreshment_guest_coffee"
+                      id="refreshment_guest_coffee">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="refresh_guest_snacks">Snacks</label>
+                    <input type="text" class="form-control" name="refreshment_guest_snacks"
+                      id="refreshment_guest_snacks">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                </div>
+
+              </div>
+
+
+            <h5>Refreshment for students</h5>
+
+            <div>
+              <div class="custom-control custom-radio">
+                <input class="form-check-input"  onclick="func_refreshment_students(0)"  type="radio" name="refreshment_Student" id="refreshment_Student" value="Yes">
+                <label class="form-check-label" for="refreshment_Student">Yes</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input class="form-check-input"  onclick="func_refreshment_students(1)" type="radio" name="refreshment_Student" id="refreshment_Student" value="No" checked>
+                <label class="form-check-label" for="refreshment_Student">No</label>
+              </div>
+              </div>
+
+
+            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#refreshment_students"
+              aria-expanded="false" aria-controls="collapseExample">
+              Required
+            </a> -->
+
+
+            <div class="collapse ma-3" id="refreshment_students">
+              <div class="form was-validated ">
+
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="refreshment_for_student_number" class="form-label">Number of persons</label>
+                    <input type="text" class="form-control" Name="refreshment_for_student_number">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label for="refreshment_for_student_time" class="form-label">Required time</label>
+                    <input type="time" class="form-control" Name="refreshment_for_student_time">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-4">
+                    <label for="refresh_student_tea">Tea</label>
+                    <input type="text" class="form-control" name="refreshment_student_tea" id="refreshment_student_tea">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="refresh_student_coffee">Coffee</label>
+                    <input type="text" class="form-control" name="refreshment_student_coffee"
+                      id="refreshment_student_coffee">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="refresh_student_snacks">Snacks</label>
+                    <input type="text" class="form-control" name="refreshment_student_snacks"
+                      id="refreshment_student_snacks">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <h5>Lunch</h5>
+
+
+            <div>
+              <div class="custom-control custom-radio">
+                <input class="form-check-input"  onclick="func_lunch(0)"  type="radio" name="lunch_radio" id="lunch_radio" value="Yes">
+                <label class="form-check-label" for="lunch_radio">Yes</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input  class="form-check-input"  onclick="func_lunch(1)" type="radio" name="lunch_radio" id="lunch_radio" value="No" checked>
+                <label class="form-check-label" for="lunch_radio">No</label>
+              </div>
+              </div>
+
+
+            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#lunch_req"
+              aria-expanded="false" aria-controls="collapseExample">
+              Required
+            </a> -->
+
+            <div class="collapse ma-3" id="lunch_req">
+              <div class="form was-validated well">
+
+                <div class="mb-3">
+                  <label for="lunch_exact_numbers" class="form-label">Mention the exact numbers</label>
+                  <input type="number" class="form-control" Name="lunch_exact_numbers">
+                  <div class="valid-feedback">Looks good!</div>
+                  <div class="invalid-feedback">Mention the exact numbers</div>
+                </div>
+    
+                
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="tiffin" class="form-label">Tiffin</label>
+                    <input type="text" class="form-control" Name="tiffin">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+    
+                  <div class="form-group col-md-6">
+                    <label for="normal_lunch" class="form-label">Normal Lunch</label>
+                    <input type="text" class="form-control" Name="normal_lunch">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+    
+                </div>
+                <div class="form-row">
+    
+                  <div class="form-group col-md-6">
+                    <label for="spl_lunch_veg" class="form-label">Special Lunch(veg)</label>
+                    <input type="text" class="form-control" Name="spl_lunch_veg">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+    
+                  <div class="form-group col-md-6">
+                    <label for="spl_lunch_non_veg" class="form-label">Special Lunch(Non-veg)</label>
+                    <input type="text" class="form-control" Name="spl_lunch_non_veg">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+    
+                </div>
+    
+                <div class="mb-3">
+                  <label for="lunch_required_time" class="form-label">Required time</label>
+                    <input type="time" class="form-control" Name="lunch_required_time">
+                    <div class="valid-feedback">Choose if required</div>
+                </div>
+
+                
+
+              </div>
+            </div>
+
+
+
+            <h5>Payment through</h5>
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through"
+                value="Association Account" required>
+              <label class="form-check-label" for="payment_through">
+                Association account
+              </label>
+            </div>
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through"
+                value="Institution Account" required>
+              <label class="form-check-label" for="payment_through">
+                Institution account
+              </label>
+            </div>
+
+            
+    
+
+          </div>
+        </div>
+
+
+        <div class="card border-dark my-3">
+          <h5 class="card-header">Transport</h5>
+          <div class="card-body">
+
+
+            <div>
+              <div class="custom-control custom-radio">
+                <input class="form-check-input"  onclick="func_transport(0)"  type="radio" name="lunch_radio" id="lunch_radio" value="Yes">
+                <label class="form-check-label" for="lunch_radio">Yes</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input class="form-check-input"  onclick="func_transport(1)" type="radio" name="lunch_radio" id="lunch_radio" value="No" checked>
+                <label class="form-check-label" for="lunch_radio">No</label>
+              </div>
+              </div>
+
+
+            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#transport" aria-expanded="false"
+              aria-controls="collapseExample">
+              Required
+            </a> -->
+
+            
+            <div class="form was-validated collapse mb-3" id="transport">
+              <div class="well">
+
+                <div class="form-row">
+                  <div class="form-group col-md-4">
+                    <label for="transport_req_date" class="form-label">Transport requirement date</label>
+                    <input type="date" class="form-control" Name="transport_req_date">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="transport_pickup_time" class="form-label">Pick up time at NGPIT</label>
+                    <input type="time" class="form-control" Name="transport_pickup_time">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+
+                  <div class="form-group col-md-4">
+                    <label for="transport_drop_time" class="form-label">Drop time</label>
+                    <input type="time" class="form-control" Name="transport_drop_time">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+
+                </div>
+
+
+                <div class="mb-3">
+                  <label for="transport_location" class="form-label">Location</label>
+                  <input type="text" class="form-control" Name="transport_location">
+                  <div class="valid-feedback">Enter if required</div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="transport_pickup_person_name" class="form-label">Name of the pick up person</label>
+                    <input type="text" class="form-control" Name="transport_pickup_person_name">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="transport_pickup_person_contact" class="form-label">Contact number of the pick up
+                      person</label>
+                    <input type="number" class="form-control" Name="transport_pickup_person_contact">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="form was-validated card border-dark my-3">
+          <h5 class="card-header">Power/System/Camera Requirement</h5>
+          <div class="card-body">
+
+
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label class="form-label">Mic arrangement</label>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="mic_arrangement" id="mic_arrangement" value="yes" required checked>
+                  <label class="form-check-label" for="mic_arrangement">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="mic_arrangement" id="mic_arrangement" value="no" required>
+                  <label class="form-check-label" for="mic_arrangement">
+                    No
+                  </label>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="mic" class="form-label">Type of mic</label>
+                <select class="form-control form-select custom-select" name="type_of_mic" id="type_of_mic">
+                  <option value="Wired Mic">Wired Mic</option>
+                  <option value="Wireless Mic">Wireless Mic</option>
+                  <option value="Wired & Wireless Mic">Wired & Wireless Mic</option>
+                </select>
+                <div class="valid-feedback">Looks good!</div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="mic_number" class="form-label">Number of mic</label>
+                <input required type="number" class="form-control" Name="mic_number">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of mic required</div>
+              </div>
+
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label class="form-label">A/c arrangement</label>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="ac_arrangement" id="ac_arrangement" value="yes" required>
+                  <label class="form-check-label" for="ac_arrangement">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="ac_arrangement" id="ac_arrangement" value="no" required>
+                  <label class="form-check-label" for="ac_arrangement">
+                    No
+                  </label>
+                </div>
+              </div>
+
+
+              <div class="form-group col-md-3">
+                <label class="form-label">LCD Projector</label>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="lcd_projector" id="lcd_projector" value="yes" required>
+                  <label class="form-check-label" for="lcd_projector">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="lcd_projector" id="lcd_projector" value="no" required>
+                  <label class="form-check-label" for="lcd_projector">
+                    No
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3">
+                <label class="form-label">Laptop</label>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="laptop" id="laptop" value="yes" required>
+                  <label class="form-check-label" for="laptop">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="laptop" id="laptop" value="no" required>
+                  <label class="form-check-label" for="laptop">
+                    No
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3">
+                <label class="form-label">Photography</label>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="photography" id="photography" value="yes" required>
+                  <label class="form-check-label" for="photography">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="photography" id="photography" value="no" required>
+                  <label class="form-check-label" for="photography">
+                    No
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form was-validated card border-dark my-3">
+          <h5 class="card-header">Memento/Seating/Reception/Item requirement</h5>
+          <div class="card-body">
+
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label class="form-label">Memento / Honorarium to chief guest</label>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="memento" id="memento" value="yes" required checked>
+                  <label class="form-check-label" for="memento">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="memento" id="memento" value="no" required>
+                  <label class="form-check-label" for="memento">
+                    No
+                  </label>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="memento_worth" class="form-label">Worth</label>
+                <input required type="number" class="form-control" Name="memento_worth" maxlength="5">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter worth of the memento(₹1000 - ₹10,000)</div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="memento_quantity" class="form-label">Quantity </label>
+                <input required type="number" class="form-control" Name="memento_quantity">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter quantity</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="seating_arrangement_numbers" class="form-label">Number of seating arrangements</label>
+                <input required type="number" class="form-control" Name="seating_arrangement_numbers">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of seating arrangements</div>
+              </div>
+
+              <div class="form-group col-md-4">
+                <label for="dias" class="form-label">Dias</label>
+                <input required type="text" class="form-control" Name="dias">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of person in dias</div>
+              </div>
+
+              <div class="form-group col-md-4">
+                <label for="audience" class="form-label">Audience</label>
+                <input required type="text" class="form-control" Name="audience">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of audiende</div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="table_cloth_number" class="form-label">Number of table cloth</label>
+              <input required type="text" class="form-control" Name="table_cloth_number">
+              <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of table cloth</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="reception_item_rec" class="form-label">Receptiom item requirements</label>
+              <input required type="text" class="form-control" Name="reception_item_rec">
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Enter the reception item requirements</div>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="my-5 d-grid gap-2 mr-5" align="center">
+
+          <input type="hidden" id="mail_id" name="mail_id" value={{mailid}}>
+          <div class="container my-3">
+            <button type="submit" class="btn btn-primary btn-lg" name="function_action" id="function_action" value="submit">Preview & Submit</button>
+          </div>
+
+          <div class="sub_load" style="display:none;" id="submit_load">
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          
+        </div>
+          <!-- <button type="button"  class="btn btn-outline-success btn-lg" data-toggle="modal" data-target="#submit_preview" >Submit</button> -->
+        </div>
+
+        
+      </div>
+
+      </form>
+      
+      {% endif %}
+
+
+<!-- Form for editting end -->
+
+
 
 
 
