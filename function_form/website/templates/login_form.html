@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Functional Requirement Form</title>
+<meta name="function requirement form" content="drngpit">
+<!-- <meta name="viewport" content="width=device-width,maximum-scale=1, initial-scale=1"> -->
+
+
+<link rel="website icon" type="png" href="{% static 'function_form/' %}images/ngp-itech-logo.png" >
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+</head>
+
+
+<body>
+
+
+
+<div class="sticky-top">
+<div style="height:220px; width:100%; background: #12539B; margin:0 auto;">
+
+<h1 style="text-align: center; color:white"><img src="{% static 'function_form/' %}images/ngp-itech-logo.png" style="max-height: 80px;max-width: 80px;">Dr. N.G.P. Institute of Technology<br><div><h4>(An Autonomous Institution)</h4></div>
+    
+</h1>
+<h2 style="text-align: center; color:white">
+	Function Requirement Form
+	</h2>
+<p style="text-align: center;color: white;">Designed and Developed by Department of CSE</p>
+</div>
+</div>
+
+<div class="mt-5 container fixed-bottom" id="pass_alert" name="pass_alert" style="margin: 0 auto;text-align:center;">
+  {% if pass_change == 'success' %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    Password change was successful !!!
+  </div>
+  {% elif pass_change == 'user_not_found' %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    User not found !!!
+  </div>
+  {% elif pass_change == 'code_not_match' %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    User found but code not match !!!
+  </div>
+  {% endif %}
+</div>
+
+{% if confirmation == "failure" %}
+<div class="mx-5 mt-3 px-5 center alert alert-danger alert-dismissible fade show" role="alert">
+<h2 style="text-align: center;"><marquee scrollamount="20">Not a valid-id !!! Try contacting admin and Try again</marquee></h2>
+</div>
+
+{% endif %}
+
+{% if confirmation == "id_not_match" %}
+<div class="mx-5 mt-3 px-5 center alert alert-danger alert-dismissible fade show" role="alert">
+<h2 style="text-align: center;"><marquee scrollamount="20">User found !!! Id does not match ... :( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enter your id and try again</marquee></h2>
+</div>
+
+{% endif %}
+   
+            
+            
+<div class="shadow-lg mt-5 card text-center my-3 rounded border-light" style="width: 25rem;margin:0 auto;">
+    <div class="shadow card-header rounded">
+    <h5>FUNCTION REQUIREMENT FORM</h5>
+        <P>LOGIN</P>
+    </div>
+  <div class="card-body">
+    <form class="form was-validated" action={% url 'login' %} method="POST">
+
+      {% csrf_token %}
+    <div class=" my-3">
+    <label for="Name" class="form-label">Login as</label>
+         <select class="shadow form-select custom-select rounded" name="login_as" id="login_as" required>
+                <option value="">Choose position</option>
+                <option value="Admin">Admin</option>
+                <option value="Staff">Staff</option>
+</select>
+    <div class="valid-feedback">Good position!</div>
+    <div class="invalid-feedback">Invalid Position</div>
+  </div>
+
+    
+    <div class="mb-3">
+    <label for="mail_id" class="form-label">Mail id</label>
+    <input type="email" class="shadow form-control rounded" Name="mail_id" id="mail_id" required>
+    <div class="valid-feedback">Looks good!</div>
+    <div class="invalid-feedback">Enter your mail id</div>
+  </div>
+    
+    
+    <div class="mb-3">
+    <label for="admin_staff_id" class="form-label">Admin/Staff password</label>
+    <input minlength="10" maxlength="25" pattern="(?=.*\W)(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{10,24}" type="password" class="shadow form-control rounded" Name="staff_id" id="staff_id" required>
+    <div class="invalid-feedback">Enter password,Must contain at least special character and one number and one uppercase and lowercase letter, and at least 10 or more characters</div>
+  </div>
+  <div>
+    <p>Is this your first time ?<button type="button" class="badge badge-dark" data-toggle="modal" data-target="#staff_change_password">
+      Change password
+    </button></p>
+  </div>
+      
+  <div class="d-grid gap-2">
+    <button type="submit"  class="btn btn-outline-primary">Login</button>
+    </div>
+  </form>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="staff_change_password" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Change password for the first time</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form was-validated" action={% url 'change_password' %} method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="staff_mail_id" class="for">Enter mail id</label>
+              <input type="email" class="form-control mb-3" Name="staff_mail_id" required>
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Enter mail id</div>
+            </div>
+            <div class="mb-3">
+              <label for="old_password" class="for">Enter old password</label>
+              <input maxlength="5" type="password" class="form-control mb-3" Name="old_password" required>
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Enter your old password provided by admin</div>
+            </div>
+            <div class="mb-3">
+              <label for="new_password" class="form-label">Enter new password</label>
+              <input pattern="(?=.*\W)(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{10,24}" type="password" class="form-control" Name="new_password" id="new_password" onkeyup="check()" required>
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Enter your new password,Must contain at least special character and one number and one uppercase and lowercase letter, and at least 10 or more characters</div>
+            </div>
+            <div class="mb-3">
+              <label for="confirm_new_password" class="form-label">Confirm new pasasword</label>
+              <input pattern="(?=.*\W)(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{10,24}" type="password" class="form-control" Name="confirm_new_password" id="confirm_new_password" onkeyup="check()" required>
+              <div class="valid-feedback" id="feedback_report">Looks good!</div>
+              <div class="invalid-feedback">Enter your new password again,Must contain at least one special character and one number and one uppercase and lowercase letter, and at least 10 or more characters</div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <input type="hidden" id="mail_id" name="mail_id" value={{mailid}}>
+          <button type="submit" id="change_password_btn" class="btn btn-warning">Change password</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+<!-- Script -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+
+  window.history.forward();
+  function noBack() {
+      window.history.forward();
+  }
+
+
+  var check = function() {
+
+    var new_pwsd = document.getElementById('new_password').value;
+    if(new_pwsd.length <= 10){
+      document.getElementById('change_password_btn').style.display='none';
+      return false;
+    }
+
+    if (document.getElementById('new_password').value == document.getElementById('confirm_new_password').value) {
+      document.getElementById('feedback_report').style.color = 'green';
+      document.getElementById('feedback_report').innerHTML = 'new password is matching'
+      document.getElementById('change_password_btn').style.display='block';
+    } else {
+      document.getElementById('feedback_report').style.color = 'red';
+      document.getElementById('feedback_report').innerHTML = 'new password is not matching'
+      document.getElementById('change_password_btn').style.display='none';
+    }
+  }
+
+
+</script>
+
+
+        
+</body>
+
+</html>
+
+<!--Hariharan P department of CSE Dr.N.G.P institute of technology-->

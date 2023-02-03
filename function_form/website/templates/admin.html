@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Functional Requirement Form</title>
+<meta name="function requirement form" content="drngpit">
+<!-- <meta name="viewport" content="width=device-width,maximum-scale=1, initial-scale=1"> -->
+
+<link rel="website icon" type="png" href="{% static 'function_form/' %}images/ngp-itech-logo.png" >
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<!-- <script type="text/javascript">
+  function disableF5(e) { if ((e.which || e.keyCode) == 116 || (e.which || e.keyCode) == 82) e.preventDefault(); };
+  
+  $(document).ready(function(){
+       $(document).on("keydown", disableF5);
+  });
+</script> -->
+
+</head>
+
+
+<body>
+
+<div style="height:220px; width:100%; background: #12539B; margin:0 auto;">
+<h1 style="text-align: center; color:white"><img src="{% static 'function_form/' %}images/ngp-itech-logo.png" style="max-height: 80px;max-width: 80px;">Dr. N.G.P. Institute of Technology<br><div><h4>(An Autonomous Institution)</h4></div>
+    
+</h1>
+<h2 style="text-align: center; color:white">
+	Function Requirement Form
+	</h2>
+<p style="text-align: center;color: white;">Designed and Developed by Department of CSE</p>
+
+    
+</div>
+
+<!-- Navbar -->
+<div class="sticky-top">
+
+<nav class="navbar navbar-expand-lg navbar-light " style="background-color: #e3f2fd;">
+  <a class="navbar-brand" href="#">
+    <img src="{% static 'function_form/' %}images/ngp-itech-logo.png" style="max-height: 50px;max-width: 50px;">
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <form class="form" id="admin_home" action={% url 'function_admin' %} method="POST">
+          {% csrf_token %}
+          <input type="hidden" id="mail_id" name="mail_id" value="{{ mailid }}">
+        <a class="nav-link" href="#" onclick="function_home()">Home</a>
+      </form>
+        
+      </li>
+      <li class="nav-item">
+        <form class="form" id="admin_waiting" action={% url 'function_admin' %} method="POST">
+          {% csrf_token %}
+          <input type="hidden" id="mail_id" name="mail_id" value="{{ mailid }}">
+          <input type="hidden" id="function_status" name="function_status" value="waiting">
+        <a class="nav-link" href="#" onclick="function_waiting()">Waiting</a>
+      </form>
+        
+      </li>
+      <li class="nav-item">
+        <form class="form" id="admin_approved" action={% url 'function_admin' %} method="POST">
+          {% csrf_token %}
+          <input type="hidden" id="mail_id" name="mail_id" value="{{ mailid }}">
+          <input type="hidden" id="function_status" name="function_status" value="approved">
+        <a class="nav-link" href="#" onclick="function_approved()">Approved</a>
+      </form>
+      </li>
+      <li class="nav-item">
+        <form class="form" id="admin_cancelled" action={% url 'function_admin' %} method="POST">
+          {% csrf_token %}
+          <input type="hidden" id="mail_id" name="mail_id" value="{{ mailid }}">
+          <input type="hidden" id="function_status" name="function_status" value="cancelled">
+        <a class="nav-link" href="#" onclick="function_cancelled()">Cancelled</a>
+      </form>
+      </li>
+      <li class="nav-item">
+        <form class="form" id="staff_list" action={% url 'function_admin' %} method="POST">
+          {% csrf_token %}
+          <input type="hidden" id="mail_id" name="mail_id" value="{{ mailid }}">
+          <input type="hidden" id="stafflist" name="stafflist" value="list">
+        <a class="nav-link" href="#" onclick="staff_list()">Staff List</a>
+      </form>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link" href="#">Ended</a>
+      </li> -->
+    </ul>
+    <form class="form-inline my-2 my-lg-0" action={% url 'login' %}>
+      <button type="submit" class="btn btn-secondary my-sm-0 mr-2" data-toggle="tooltip" data-placement="left" title="Click here to logout">
+        {{mailid}}
+      </button>
+    </form>
+    <button type="button" id="new_staff_add_btn" class="btn btn-primary my-2 my-sm-0" data-toggle="modal" data-target="#new_staff_add">Add others</button>
+  </div>
+</nav>
+
+</div>
+
+
+<!-- Modal -->
+
+<div class="modal fade" id="new_staff_add" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Function requirement form - Add Staff</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form was-validated" id="add_new_s" method="POST" action={% url 'add_new_staff' %}>
+        <div class="container-sm">
+          {% csrf_token %}
+        <div class="mx-5 mb-3">
+          <label for="add_staff_mail_id" class="form-label">Staff Mail-id</label>
+          <input type="email" class="form-control" name="add_staff_mail_id" id="add_staff_mail_id" required>
+          <div class="invalid-feedback">Enter mail-id</div>
+        </div>
+                  
+          <div class="mx-5 mb-3">
+          <label for="add_staff_code" class="form-label">login Password</label>
+          <input minlength="5" maxlength="5" type="text" class="form-control" name="add_staff_code" id="add_staff_code" required>
+          <div class="invalid-feedback">Enter code</div>
+        </div>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <input type="hidden" id="mail_id" name="mail_id" value="{{mailid}}">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Add</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+{% if add_new != none %}
+
+<div class="alert alert-success mt-5" name="success" id="success" role="alert" style="margin:0 auto; max-width:600px;text-align:center;">
+  <strong>Successfully Added !!!</strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
+
+{% if staff_lst == "List" %}
+<div class="container ma-5 mt-3" style="margin: 0 auto;">
+<table class="table table-hover table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">Staff mail id</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for s in staff %}
+    <tr>
+      <td>{{s.email}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+
+
+
+
+{% if function != 'none' %}
+
+{% for f in function %}
+
+
+<div class="shadow-lg mt-5 card  my-3 rounded border-dark" style="width: 60rem;margin:0 auto;">
+    <div class="shadow card-header rounded">
+    <h3 style="text-align:center; ">{{f.func_name}}</h3>
+    </div>
+  <div class="card-body">
+    <div class=" mt-3">
+      <h5 style="text-align:left;">venue&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.venue }}</h5>
+      <h5 style="text-align:left;">Department&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.dept_name }}</h5>
+		<h5 style="text-align:left;">Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.func_date }}</h5>
+		<h5 style="text-align:left;">Starting Time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.time_duration_start }}</h5>
+    <h5 style="text-align:left;">Ending Time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.time_duration_end }}</h5>
+		<h5 style="text-align:left;">Chief Guest&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.chief_guest_name }}</h5>
+		<h5 style="text-align:left;">Organizer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.organizer_name }}</h5>
+		<h5 style="text-align:left;">Contact&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.organizer_contact }}</h5>
+		
+    <form action="/download" method="POST">
+      {% csrf_token %}
+      <input type="hidden" id="func_name" name="func_name" value="{{f.func_name}}">
+    <p>Click here to download the form  <button class="btn btn-primary btn-sm" type="submit">Download</button></p>    
+  </form>
+  </div>
+
+    
+      
+      
+  {% if f.status == "waiting" %}
+
+  <div class="container">
+    <form action="/u/" method="POST">
+      {% csrf_token %}
+      <input type="hidden" id="mail_id" name="mail_id" value="{{mailid}}">
+      <input type="hidden" id="func_name" name="func_name" value="{{ f.func_name }}">
+      <input type="hidden" id="func_date" name="func_date" value="{{ f.func_date }}">
+      <input type="hidden" id="func_venue" name="func_venue" value="{{ f.venue }} ">
+      <input type="hidden" id="start_time" name="start_time" value="{{ f.time_duration_start }} ">
+      <input type="hidden" id="end_time" name="end_time" value="{{ f.time_duration_end }}">
+      <input type="hidden" id="org_mail" name="org_mail" value="{{ f.organizer_mail_id }}">
+      <button class="col-5 btn btn-success mx-5" name="admin_action" value="approve">Approve</button>
+      <button class="col-5 btn btn-danger ml-2" name="admin_action" value="cancel">Cancel</button>
+    </form>
+  </div>
+
+      
+  
+    {% endif %}
+    {% if f.status == "approved" %}
+    <div class="my-2 "  align="center">
+      <div class="alert alert-success" role="alert">
+        This booking of the function was approved !!!
+      </div>
+    </div>
+    {% endif %}
+    {% if f.status == "cancelled" %}
+    <div class="my-2 " align="center">
+      <div class="alert alert-danger" role="alert">
+        This booking of the function was cancelled !!!
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+
+{% else %}
+<div class="alert alert-warning" role="alert">
+  No booking found !!!
+</div>
+
+{% endif %}
+
+
+
+
+
+
+<!-- Script -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript">
+  function function_home(){
+    document.getElementById("admin_home").submit()
+  }
+
+  function function_waiting(){
+    document.getElementById("admin_waiting").submit()
+  }
+
+  function function_approved(){
+    document.getElementById("admin_approved").submit()
+  }
+
+  function function_cancelled(){
+    document.getElementById("admin_cancelled").submit()
+  }
+
+  function staff_list(){
+    document.getElementById("staff_list").submit()
+  }
+
+</script>
+
+<script type="text/javascript">
+  window.history.forward();
+  function noBack() {
+      window.history.forward();
+  }
+</script>
+
+<!-- <script type="text/javascript">
+  function disableF5(e) { if ((e.which || e.keyCode) == 116 || (e.which || e.keyCode) == 82) e.preventDefault(); };
+  
+  $(document).ready(function(){
+       $(document).on("keydown", disableF5);
+  });
+</script> -->
+
+
+
+
+</body>
+
+</html>

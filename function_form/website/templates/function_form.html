@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html lang="en">
+  <html>
+
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Functional Requirement Form</title>
+      <meta name="function requirement form" content="drngpit">
+      <!-- <meta name="viewport" content="width=device-width,maximum-scale=1, initial-scale=1"> -->
+
+      <link rel="website icon" type="png" href="{% static 'function_form/' %}images/ngp-itech-logo.png" >
+
+
+      <link rel="stylesheet" href="{% static 'function_form/' %}css/styles.css">
+
+
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+      <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+
+      <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    </head>
+
+
+    <body style="font-family:sans-serif;-webkit-text-size-adjust: 100%;">
+
+      
+
+        <div
+          style="height:200px; width:100%; background: #12539B; margin:0 auto;font-family:sans-serif;-webkit-text-size-adjust: 100%;">
+          <h1 style="text-align: center; color:white"><img src="{% static 'function_form/' %}images/ngp-itech-logo.png"
+              style="max-height: 80px;max-width: 80px;">Dr. N.G.P. Institute of Technology<br>
+            <div>
+              <h4>(An Autonomous Institution)</h4>
+            </div>
+
+          </h1>
+
+          <h2 style="text-align: center; color:white">
+            Function Requirement Form
+          </h2>
+          <p style="text-align: center;color: white;">Designed and Developed by Department of CSE</p>
+
+        </div>
+
+        <div class="sticky-top">
+
+        <nav class="navbar navbar-expand-lg navbar-light " style="background-color: #e3f2fd;">
+          <a class="navbar-brand" href="#">
+            <img src="{% static 'function_form/' %}images/ngp-itech-logo.png" style="max-height: 50px;max-width: 50px;">
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <form class="form" id="home_func" action={% url 'function_home' %} method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" id="mail_id" name="mail_id" value="{{ mailid }}">
+                  <a class="nav-link" href="#" onclick="function_home()">Home<span class="sr-only">(current)</span></a>
+                </form>
+              </li>
+              <li class="nav-item">
+                <form class="form" id="waiting_func" action={% url 'function_home' %} method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" id="mail_id" name="mail_id" value="{{ mailid }}">
+                  <input type="hidden" id="function_status" name="function_status" value="waiting">
+                <a class="nav-link" href="#" onclick="function_submitted()">Submitted</a>
+              </form>
+              </li>
+              <li class="nav-item">
+                <form class="form" id="approved_func" action={% url 'function_home' %} method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" id="mail_id" name="mail_id" value="{{ mailid }}">
+                  <input type="hidden" id="function_status" name="function_status" value="approved">
+                <a class="nav-link" href="#" onclick="function_approved()">Approved</a>
+              </form>
+              </li>
+              <li class="nav-item">
+                <form class="form" id="cancelled_func" action={% url 'function_home' %} method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" id="mail_id" name="mail_id" value="{{ mailid }}">
+                  <input type="hidden" id="function_status" name="function_status" value="cancelled">
+                <a class="nav-link" href="#" onclick="function_cancelled()">Cancelled</a>
+              </form>
+              </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" action={% url 'login' %}>
+              <button type="submit" class="btn btn-secondary my-sm-0 mr-2" data-toggle="tooltip" data-placement="left" title="Click here to logout">
+                {{mailid}}
+              </button>
+            </form>
+          </div>
+        </nav>
+
+      </div>
+
+      {% if mail_status == "sent" %}
+      <div class="alert alert-success" role="alert">
+        <p class="text-center">Successfully submitted the form and the mail is sent to you !!!</p>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endif %}
+
+      {% if submission == True %}
+
+      <div class="alert alert-success" role="alert">
+        <p class="text-center">Successfully submitted the form !!!</p>
+      </div>
+      {% elif submission == "Exists" %}
+      <div class="alert alert-warning" role="alert">
+        <p class="text-center">Form already submitted !!!</p>
+      </div>
+
+      {% endif %}
+
+      <!-- iframe for viewing the pdf  -->
+
+      {% if document != none %}
+      <div class="ExternalFiles">
+        <embed style="width:100%;height:500px;" src="{% static 'function_form/' %}function_documents/{{document}}"
+          type="text/pdf">
+      </div>
+      {% endif %}
+
+      <!-- iframe end -->
+
+      {% if view_form == 'view' %}
+
+      <div class="px-5 my-5 " text-white style="width:60rem;margin:0 auto;">
+
+        <div class="card border-dark mb-3">
+          <h5 class="card-header">General details</h5>
+          <div class="card-body">
+
+
+
+            <div class="mb-3">
+              <label for="func_date" class="for">Date</label>
+              <input disabled type="date" class="form-control mb-3" Name="func_date" value={{date}}>
+            </div>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#staticBackdrop">
+              Check availability
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog"
+              aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Check venue availability</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form class="form was-validated" action={% url 'check_availability' %} method="POST">
+                      {% csrf_token %}
+                      <div class="mb-3">
+                        <label for="func_date" class="for">Date</label>
+                        <input type="date" class="form-control mb-3" Name="func_date_check" required>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Choose date</div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="time_duration_start_check" class="form-label">Starting time</label>
+                        <input type="time" class="form-control" Name="time_duration_start_check" required>
+                        <div class="valid-feedback">Good time!</div>
+                        <div class="invalid-feedback">Choose time in 24-hours format</div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="time_duration_end_check" class="form-label">Ending time</label>
+                        <input type="time" class="form-control" Name="time_duration_end_check" required>
+                        <div class="valid-feedback">Good time!</div>
+                        <div class="invalid-feedback">Choose time in 24-hours format</div>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <input type="hidden" id="mail_id" name="mail_id" value={{mailid}}>
+                    <button type="submit" class="btn btn-primary">Get venue</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <form class="form was-validated" action={% url 'submit' %} method="POST">
+
+              {% csrf_token %}
+              <div class=" mb-3">
+                <label for="venue" class="form-label">Select your venue</label>
+                <select class="shadow form-select custom-select rounded" name="venue" id="venue" required>
+                  <option value="">- - - - - - - - - -</option>
+                  {% for v in venue %}
+                  <option value="{{ v }}">{{v}}</option>
+                  {% endfor %}
+                </select>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Choose venue</div>
+
+              </div>
+
+              <div class="mb-3">
+                {% if date != None %}
+                <input type="hidden" class="form-control mb-3" id="func_date" name="func_date" value="{{ date }}">
+                <input type="hidden" class="form-control" id="time_duration_func_start" name="time_duration_func_start"
+                  value="{{ start_time }}">
+                <input type="hidden" class="form-control" id="time_duration_func_end" name="time_duration_func_end"
+                  value="{{ end_time }}">
+                {% endif %}
+                <label for="func_days" class="form-label">Number of days</label>
+                <input type="number" class="form-control" name="func_days" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of days</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="time_duration_start" class="form-label">Starting time</label>
+                <input disabled type="time" class="form-control" id="time_duration_func_start"
+                  name="time_duration_func_start" value="{{ start_time }}">
+
+              </div>
+
+              <div class="mb-3">
+                <label for="time_duration_end" class="form-label">Ending time</label>
+                <input disabled type="time" class="form-control" id="time_duration_func_end"
+                  name="time_duration_func_end" value="{{ end_time }}">
+              </div>
+
+
+              <div class="mb-3">
+                <label for="Name" class="form-label">Select your department</label>
+                <select class="shadow form-select custom-select rounded" name="department" id="department" required>
+                  <option value="">- - - - - - -</option>
+                  <option value="AI & DS">AI & DS</option>
+                  <option value="BME">BME</option>
+                  <option value="CSE">CSE</option>
+                  <option value="CSBS">CSBS</option>
+                  <option value="Civil">Civil</option>
+                  <option value="ECE">ECE</option>
+                  <option value="EEE">EEE</option>
+                  <option value="Mechanical">Mechanical</option>
+                  <option value="IT">IT</option>
+                  <option value="MBA">MBA</option>
+                </select>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Choose department</div>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="func_name" class="form-label">Name of the function</label>
+                <input type="text" class="form-control" Name="func_name" id="function_name" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter name of the function</div>
+              </div>
+
+
+
+
+              <div class="mb-3">
+                <label for="training_type" class="form-label">Type of training</label>
+                <input required type="text" class="form-control" Name="train_type">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter type of training</div>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="func_students" class="form-label">Number of students</label>
+                <input required type="number" class="form-control" Name="func_students">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of students</div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label for="func_students_year">Year of Students</label>
+                  <select class="shadow form-select custom-select rounded" name="func_students_year"
+                    id="func_students_year" required>
+                    <option value="">- - - - - - -</option>
+                    <option value="I">I</option>
+                    <option value="II">II</option>
+                    <option value="III">III</option>
+                    <option value="IV">IV</option>
+                  </select>
+                  <div class="valid-feedback">Looks good!</div>
+                  <div class="invalid-feedback">Choose year</div>
+                </div>
+
+                <div class="form-group col-md-4">
+                  <label for="func_students_dept">Students department</label>
+                  <select class="shadow form-select custom-select rounded" name="func_students_dept"
+                    id="func_students_dept" required>
+                    <option value="">- - - - - - -</option>
+                    <option value="AI & DS">AI & DS</option>
+                    <option value="BME">BME</option>
+                    <option value="CSE">CSE</option>
+                    <option value="CSBS">CSBS</option>
+                    <option value="Civil">Civil</option>
+                    <option value="ECE">ECE</option>
+                    <option value="EEE">EEE</option>
+                    <option value="Mechanical">Mechanical</option>
+                    <option value="IT">IT</option>
+                    <option value="MBA">MBA</option>
+                  </select>
+                  <div class="valid-feedback">Looks good!</div>
+                  <div class="invalid-feedback">Choose department</div>
+                </div>
+
+                <div class="form-group col-md-4">
+                  <label for="func_students_class">Students class</label>
+                  <select class="shadow form-select custom-select rounded" name="func_students_class"
+                    id="func_students_class" required>
+                    <option value="">- - - - - - -</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="A & B">A & B</option>
+                  </select>
+                  <div class="valid-feedback">Looks good!</div>
+                  <div class="invalid-feedback">Choose class</div>
+                </div>
+              </div>
+
+              <div class="form-row">
+
+                <div class="form-group col-md-4">
+                  <label class="form-label">Transport required for students</label>
+                  <div class="custom-control custom-radio">
+                    <input class="form-check-input" type="radio" name="transport_students" id="transport_students"
+                      value="yes" onclick="transport_student(0)" required>
+                    <label class="form-check-label" for="transport_students">Yes</label>
+                  </div>
+                  <div class="custom-control custom-radio">
+                    <input class="form-check-input" type="radio" name="transport_students" id="transport_students"
+                      value="no" onclick="transport_student(1)" required>
+                    <label class="form-check-label" for="transport_students">No</label>
+                  </div>
+                </div>
+
+                
+                <!-- <div class="collapse"></div> -->
+                <div class="form-group col-md-4" id="transport_students_radio_stage">
+                  <label for="transport_students_stage" class="form-label">Name of stage </label>
+                  <input type="text" class="form-control" Name="transport_students_stage" id="transport_students_stage">
+                  <div class="valid-feedback">If yes,please fill out</div>
+                </div>
+
+                <div class="form-group col-md-4" id="transport_students_radio_student_number">
+                  <label for="transport_students_number" class="form-label">Number of students </label>
+                  <input type="number" class="form-control" Name="transport_students_number" id="transport_students_number">
+                  <div class="valid-feedback">If yes,please fill out</div>
+                </div>
+
+              </div>
+
+
+              <div class="mb-3">
+                <label for="chief_guest_name" class="form-label">Name of the chief guest</label>
+                <input required type="text" class="form-control" Name="chief_guest_name">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter name of the chief guest</div>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="designation" class="form-label">Designation</label>
+                <input required type="text" class="form-control" Name="designation">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter designation</div>
+              </div>
+
+
+              <div class="form-group">
+                <label for="field">Select field</label>
+                <select class="form-select custom-select rounded" id="field_type" name="field_type" required>
+                  <option value="">Choose...</option>
+                  <option value="College">College</option>
+                  <option value="Industry">Industry</option>
+                </select>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Choose field</div>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="organizer_name" class="form-label">Name of the organizer</label>
+                <input required type="text" class="form-control" Name="organizer_name">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter name of the organizer</div>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="organizer_contact" class="form-label">Contact number of the organizer</label>
+                <input required type="number" class="form-control" Name="organizer_contact">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter contact number of the organizer</div>
+              </div>
+
+          </div>
+        </div>
+
+
+        <div class="card border-dark my-3">
+          <h5 class="card-header">Guest House</h5>
+          <div class="card-body">
+
+            <div class="custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="guestHouse" id="guestHouse"
+                value="yes" onclick="guest_house(0)" required>
+              <label class="form-check-label" for="guestHouse">Yes</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="guestHouse" id="guestHouse"
+                value="no" onclick="guest_house(1)" required checked>
+              <label class="form-check-label" for="guestHouse">No</label>
+            </div>
+            
+
+
+            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#guest_house_pd"
+              aria-expanded="false" aria-controls="collapseExample">
+              Required
+            </a>-->
+
+
+            <div class="form was-validated collapse mb-3" id="guest_House"> 
+              <div class="form was-validated well" id="guest_House_PD">
+
+                <div class="mb-3" id="guest_house_p">
+                  <label for="guest_house_persons" id="guest_house_persons" class="form-label">Number of persons</label>
+                  <input type="text" class="form-control" id="guest_house_persons" name="guest_house_persons">
+                  <div class="valid-feedback">Enter if required</div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-4" id="guest_house_d">
+                    <label for="guest_house_days" id="guest_house_days" class="form-label">Number of days</label>
+                    <input type="number" class="form-control" id="guest_house_days" name="guest_house_days">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+
+                  <div class="form-group col-md-4" id="guest_house_from_date">
+                    <label for="guest_house_from_date" id="guest_house_from_date" class="form-label">From date</label>
+                    <input type="date" class="form-control" id="guest_house_from_date" name="guest_house_from_date">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+
+                  <div class="form-group col-md-4" id="guest_house_to_date">
+                    <label for="guest_house_to_date" id="guest_house_to_date" class="form-label">To date</label>
+                    <input type="date" class="form-control" id="guest_house_to_date" name="guest_house_to_date">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+
+
+        <div class="form card border-dark my-3">
+          <h5 class="card-header">Refreshment and Lunch</h5>
+          <div class="card-body">
+            <h5>Refreshment for guest</h5>
+
+            <div>
+            <div class="custom-control custom-radio">
+              <input class="form-check-input"  onclick="func_refreshment_guest(0)"  type="radio" name="refreshment_Guest" id="refreshment_Guest" value="Yes">
+              <label class="form-check-label" for="refreshment_Guest">Yes</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input class="form-check-input"  onclick="func_refreshment_guest(1)" type="radio" name="refreshment_Guest" id="refreshment_Guest" value="No" checked>
+              <label class="form-check-label" for="refreshment_Guest">No</label>
+            </div>
+            </div>
+
+
+              <div class="collapse ma-3" id="refreshment_guest_radio">
+
+                <div class="form form-row was-validated ">
+                  <div class="form-group col-md-6">
+                    <label for="refreshment_for_guest_number" class="form-label">Number of person</label>
+                    <input type="text" class="form-control" Name="refreshment_for_guest_number" id="r_guest_number">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label for="refreshment_for_guest_time" class="form-label">Required time</label>
+                    <input type="time" class="form-control" Name="refreshment_for_guest_time" id="r_guest_time">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+                </div>
+
+                <div class="form form-row was-validated ">
+                  <div class="form-group col-md-4">
+                    <label for="refresh_guest_tea">Tea</label>
+                    <input type="text" class="form-control" name="refreshment_guest_tea" id="refreshment_guest_tea">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="refresh_guest_coffee">Coffee</label>
+                    <input type="text" class="form-control" name="refreshment_guest_coffee"
+                      id="refreshment_guest_coffee">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="refresh_guest_snacks">Snacks</label>
+                    <input type="text" class="form-control" name="refreshment_guest_snacks"
+                      id="refreshment_guest_snacks">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                </div>
+
+              </div>
+
+
+            <h5>Refreshment for students</h5>
+
+            <div>
+              <div class="custom-control custom-radio">
+                <input class="form-check-input"  onclick="func_refreshment_students(0)"  type="radio" name="refreshment_Student" id="refreshment_Student" value="Yes">
+                <label class="form-check-label" for="refreshment_Student">Yes</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input class="form-check-input"  onclick="func_refreshment_students(1)" type="radio" name="refreshment_Student" id="refreshment_Student" value="No" checked>
+                <label class="form-check-label" for="refreshment_Student">No</label>
+              </div>
+              </div>
+
+
+            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#refreshment_students"
+              aria-expanded="false" aria-controls="collapseExample">
+              Required
+            </a> -->
+
+
+            <div class="collapse ma-3" id="refreshment_students">
+              <div class="form was-validated ">
+
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="refreshment_for_student_number" class="form-label">Number of persons</label>
+                    <input type="text" class="form-control" Name="refreshment_for_student_number">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label for="refreshment_for_student_time" class="form-label">Required time</label>
+                    <input type="time" class="form-control" Name="refreshment_for_student_time">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-4">
+                    <label for="refresh_student_tea">Tea</label>
+                    <input type="text" class="form-control" name="refreshment_student_tea" id="refreshment_student_tea">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="refresh_student_coffee">Coffee</label>
+                    <input type="text" class="form-control" name="refreshment_student_coffee"
+                      id="refreshment_student_coffee">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="refresh_student_snacks">Snacks</label>
+                    <input type="text" class="form-control" name="refreshment_student_snacks"
+                      id="refreshment_student_snacks">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <h5>Lunch</h5>
+
+
+            <div>
+              <div class="custom-control custom-radio">
+                <input class="form-check-input"  onclick="func_lunch(0)"  type="radio" name="lunch_radio" id="lunch_radio" value="Yes">
+                <label class="form-check-label" for="lunch_radio">Yes</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input  class="form-check-input"  onclick="func_lunch(1)" type="radio" name="lunch_radio" id="lunch_radio" value="No" checked>
+                <label class="form-check-label" for="lunch_radio">No</label>
+              </div>
+              </div>
+
+
+            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#lunch_req"
+              aria-expanded="false" aria-controls="collapseExample">
+              Required
+            </a> -->
+
+            <div class="collapse ma-3" id="lunch_req">
+              <div class="form was-validated well">
+
+                <div class="mb-3">
+                  <label for="lunch_exact_numbers" class="form-label">Mention the exact numbers</label>
+                  <input type="number" class="form-control" Name="lunch_exact_numbers">
+                  <div class="valid-feedback">Looks good!</div>
+                  <div class="invalid-feedback">Mention the exact numbers</div>
+                </div>
+    
+                
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="tiffin" class="form-label">Tiffin</label>
+                    <input type="text" class="form-control" Name="tiffin">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+    
+                  <div class="form-group col-md-6">
+                    <label for="normal_lunch" class="form-label">Normal Lunch</label>
+                    <input type="text" class="form-control" Name="normal_lunch">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+    
+                </div>
+                <div class="form-row">
+    
+                  <div class="form-group col-md-6">
+                    <label for="spl_lunch_veg" class="form-label">Special Lunch(veg)</label>
+                    <input type="text" class="form-control" Name="spl_lunch_veg">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+    
+                  <div class="form-group col-md-6">
+                    <label for="spl_lunch_non_veg" class="form-label">Special Lunch(Non-veg)</label>
+                    <input type="text" class="form-control" Name="spl_lunch_non_veg">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+    
+                </div>
+    
+                <div class="mb-3">
+                  <label for="lunch_required_time" class="form-label">Required time</label>
+                    <input type="time" class="form-control" Name="lunch_required_time">
+                    <div class="valid-feedback">Choose if required</div>
+                </div>
+
+                
+
+              </div>
+            </div>
+
+
+
+            <h5>Payment through</h5>
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through"
+                value="Association Account" required>
+              <label class="form-check-label" for="payment_through">
+                Association account
+              </label>
+            </div>
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through"
+                value="Institution Account" required>
+              <label class="form-check-label" for="payment_through">
+                Institution account
+              </label>
+            </div>
+
+            
+    
+
+          </div>
+        </div>
+
+
+        <div class="card border-dark my-3">
+          <h5 class="card-header">Transport</h5>
+          <div class="card-body">
+
+
+            <div>
+              <div class="custom-control custom-radio">
+                <input class="form-check-input"  onclick="func_transport(0)"  type="radio" name="lunch_radio" id="lunch_radio" value="Yes">
+                <label class="form-check-label" for="lunch_radio">Yes</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input class="form-check-input"  onclick="func_transport(1)" type="radio" name="lunch_radio" id="lunch_radio" value="No" checked>
+                <label class="form-check-label" for="lunch_radio">No</label>
+              </div>
+              </div>
+
+
+            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#transport" aria-expanded="false"
+              aria-controls="collapseExample">
+              Required
+            </a> -->
+
+            
+            <div class="form was-validated collapse mb-3" id="transport">
+              <div class="well">
+
+                <div class="form-row">
+                  <div class="form-group col-md-4">
+                    <label for="transport_req_date" class="form-label">Transport requirement date</label>
+                    <input type="date" class="form-control" Name="transport_req_date">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="transport_pickup_time" class="form-label">Pick up time at NGPIT</label>
+                    <input type="time" class="form-control" Name="transport_pickup_time">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+
+                  <div class="form-group col-md-4">
+                    <label for="transport_drop_time" class="form-label">Drop time</label>
+                    <input type="time" class="form-control" Name="transport_drop_time">
+                    <div class="valid-feedback">Choose if required</div>
+                  </div>
+
+                </div>
+
+
+                <div class="mb-3">
+                  <label for="transport_location" class="form-label">Location</label>
+                  <input type="text" class="form-control" Name="transport_location">
+                  <div class="valid-feedback">Enter if required</div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="transport_pickup_person_name" class="form-label">Name of the pick up person</label>
+                    <input type="text" class="form-control" Name="transport_pickup_person_name">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="transport_pickup_person_contact" class="form-label">Contact number of the pick up
+                      person</label>
+                    <input type="number" class="form-control" Name="transport_pickup_person_contact">
+                    <div class="valid-feedback">Enter if required</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="form was-validated card border-dark my-3">
+          <h5 class="card-header">Power/System/Camera Requirement</h5>
+          <div class="card-body">
+
+
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label class="form-label">Mic arrangement</label>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="mic_arrangement" id="mic_arrangement" value="yes" required checked>
+                  <label class="form-check-label" for="mic_arrangement">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="mic_arrangement" id="mic_arrangement" value="no" required>
+                  <label class="form-check-label" for="mic_arrangement">
+                    No
+                  </label>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="mic" class="form-label">Type of mic</label>
+                <select class="form-control form-select custom-select" name="type_of_mic" id="type_of_mic">
+                  <option value="Wired Mic">Wired Mic</option>
+                  <option value="Wireless Mic">Wireless Mic</option>
+                  <option value="Wired & Wireless Mic">Wired & Wireless Mic</option>
+                </select>
+                <div class="valid-feedback">Looks good!</div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="mic_number" class="form-label">Number of mic</label>
+                <input required type="number" class="form-control" Name="mic_number">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of mic required</div>
+              </div>
+
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label class="form-label">A/c arrangement</label>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="ac_arrangement" id="ac_arrangement" value="yes" required>
+                  <label class="form-check-label" for="ac_arrangement">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="ac_arrangement" id="ac_arrangement" value="no" required>
+                  <label class="form-check-label" for="ac_arrangement">
+                    No
+                  </label>
+                </div>
+              </div>
+
+
+              <div class="form-group col-md-3">
+                <label class="form-label">LCD Projector</label>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="lcd_projector" id="lcd_projector" value="yes" required>
+                  <label class="form-check-label" for="lcd_projector">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="lcd_projector" id="lcd_projector" value="no" required>
+                  <label class="form-check-label" for="lcd_projector">
+                    No
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3">
+                <label class="form-label">Laptop</label>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="laptop" id="laptop" value="yes" required>
+                  <label class="form-check-label" for="laptop">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="laptop" id="laptop" value="no" required>
+                  <label class="form-check-label" for="laptop">
+                    No
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3">
+                <label class="form-label">Photography</label>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="photography" id="photography" value="yes" required>
+                  <label class="form-check-label" for="photography">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="photography" id="photography" value="no" required>
+                  <label class="form-check-label" for="photography">
+                    No
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form was-validated card border-dark my-3">
+          <h5 class="card-header">Memento/Seating/Reception/Item requirement</h5>
+          <div class="card-body">
+
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label class="form-label">Memento / Honorarium to chief guest</label>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="memento" id="memento" value="yes" required checked>
+                  <label class="form-check-label" for="memento">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check custom-control custom-radio">
+                  <input class="form-check-input" type="radio" name="memento" id="memento" value="no" required>
+                  <label class="form-check-label" for="memento">
+                    No
+                  </label>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="memento_worth" class="form-label">Worth</label>
+                <input required type="number" class="form-control" Name="memento_worth" maxlength="5">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter worth of the memento(₹1000 - ₹10,000)</div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="memento_quantity" class="form-label">Quantity </label>
+                <input required type="number" class="form-control" Name="memento_quantity">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter quantity</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="seating_arrangement_numbers" class="form-label">Number of seating arrangements</label>
+                <input required type="number" class="form-control" Name="seating_arrangement_numbers">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of seating arrangements</div>
+              </div>
+
+              <div class="form-group col-md-4">
+                <label for="dias" class="form-label">Dias</label>
+                <input required type="text" class="form-control" Name="dias">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of person in dias</div>
+              </div>
+
+              <div class="form-group col-md-4">
+                <label for="audience" class="form-label">Audience</label>
+                <input required type="text" class="form-control" Name="audience">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of audiende</div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="table_cloth_number" class="form-label">Number of table cloth</label>
+              <input required type="text" class="form-control" Name="table_cloth_number">
+              <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Enter number of table cloth</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="reception_item_rec" class="form-label">Receptiom item requirements</label>
+              <input required type="text" class="form-control" Name="reception_item_rec">
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Enter the reception item requirements</div>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="my-5 d-grid gap-2 mr-5" align="center">
+
+          <input type="hidden" id="mail_id" name="mail_id" value={{mailid}}>
+          <div class="container my-3">
+            <button type="submit" class="btn btn-primary btn-lg" name="function_action" id="function_action" value="submit">Preview & Submit</button>
+          </div>
+
+          <div class="sub_load" style="display:none;" id="submit_load">
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          
+        </div>
+          <!-- <button type="button"  class="btn btn-outline-success btn-lg" data-toggle="modal" data-target="#submit_preview" >Submit</button> -->
+        </div>
+
+        
+      </div>
+
+      </form>
+      
+      {% endif %}
+
+
+        <!-- <div class="spinner-wrapper">
+          <div class="position-relative">
+        
+            <div class="translate-middle ">
+              <div class="spinner-border text-primary" style="width: 20rem; height: 20rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+
+          </div>
+        
+        </div> -->
+
+
+
+
+      {% if function != "none" %}
+
+      {% for f in function %}
+
+
+      <div class="shadow-lg mt-5 card  my-3 rounded border-dark" style="width: 60rem;margin:0 auto;">
+        <div class="shadow card-header rounded">
+          <h3 style="text-align:center; ">{{f.func_name}}</h3>
+        </div>
+        <div class="card-body">
+          <div class=" mt-3">
+            <h5 style="text-align:left;">
+              Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+              {{ f.func_date }}</h5>
+            <h5 style="text-align:left;">Starting Time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.time_duration_start }}</h5>
+            <h5 style="text-align:left;">Ending Time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.time_duration_end }}</h5>
+            <h5 style="text-align:left;">Chief Guest&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.chief_guest_name }}
+            </h5>
+            <h5 style="text-align:left;">Organizer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.organizer_name }}</h5>
+            <h5 style="text-align:left;">
+              Contact&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.organizer_contact }}</h5>
+            <h5 style="text-align:left;">
+              venue&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ f.venue }}</h5>
+
+          </div>
+
+          <div class="my-2 ">
+
+
+            {% if f.status == "waiting" %}
+            <div class="alert alert-warning" role="alert">
+              The booking for the function was waiting for approval !!!
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-10">
+                <form action="/download" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" id="organizer_mail_id" name="organizer_mail_id" value={{mailid}}>
+                  <input type="hidden" id="func_name" name="func_name" value="{{f.func_name}}">
+                  <button type="submit" class="btn btn-primary" id="download_func"
+                    name="download_func">Download</button>
+                </form>
+              </div>
+
+              <div align="right">
+                <div class="form-group col-md-10">
+                  <form method="POST" action={% url 'delete' %}>
+                    {% csrf_token %}
+                    <input type="hidden" id="organizer_mail_id" name="organizer_mail_id" value="{{ mailid }}">
+                  <input type="hidden" id="func_name" name="func_name" value="{{ f.func_name }}">
+                  <input type="hidden" id="func_date" name="func_date" value="{{ f.func_date }}">
+                  <input type="hidden" id="start_time" name="start_time" value="{{ f.time_duration_start }}">
+                  <input type="hidden" id="end_time" name="end_time" value="{{ f.time_duration_end }}">
+                  <input type="hidden" id="venue" name="venue" value="{{ f.venue }}">
+                    <button type="submit" class="btn btn-danger" id="delete_func" name="delete_func" value="delete_func">Delete</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            
+
+            {% elif f.status == "approved" %}
+            <div class="alert alert-success" role="alert">
+              The booking for the function was successfully approved !!!
+            </div>
+            <form action="/download" method="POST">
+              {% csrf_token %}
+              <input type="hidden" id="organizer_mail_id" name="organizer_mail_id" value={{mailid}}>
+              <input type="hidden" id="func_name" name="func_name" value="{{f.func_name}}">
+              <button type="submit" class="btn btn-primary" id="download_func"
+                name="download_func">Download</button>
+            </form>
+
+            {% elif f.status == "cancelled" %}
+            <div class="alert alert-danger" role="alert">
+              The booking for the function was cancelled !!!
+            </div>
+            <div align="right">
+              <div class="form-group col-md-10">
+                <form action={% url 'delete' %} method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" id="organizer_mail_id" name="organizer_mail_id" value="{{ mailid }}">
+                  <input type="hidden" id="func_name" name="func_name" value="{{ f.func_name }}">
+                  <input type="hidden" id="func_date" name="func_date" value="{{ f.func_date }}">
+                  <input type="hidden" id="start_time" name="start_time" value="{{ f.time_duration_start }}">
+                  <input type="hidden" id="end_time" name="end_time" value="{{ f.time_duration_end }}">
+                  <input type="hidden" id="venue" name="venue" value="{{ f.venue }}">
+                  <button type="submit" class="btn btn-danger" id="delete_func" name="delete_func" value="delete_func">Delete</button>
+                </form>
+              </div>
+            </div>
+            {% endif %}
+            
+
+          </div>
+
+        </div>
+      </div>
+      {% endfor %}
+
+      {% else %}
+      <div class="alert alert-warning" role="alert">
+        No booking found !!!
+      </div>
+
+      {% endif %}
+
+
+
+
+
+
+
+      <script type="text/javascript">
+
+        document.getElementById("function_name").onkeypress = function(e) {
+          var chr = String.fromCharCode(e.which);
+          if ("></\\:;!@#$%^&*()".indexOf(chr) >= 0)
+              return false;
+        };
+      
+
+        function function_home(){
+          document.getElementById("home_func").submit();
+        }
+
+        function function_submitted(){
+          document.getElementById("waiting_func").submit();
+        }
+
+        function function_approved(){
+          document.getElementById("approved_func").submit();
+        }
+
+        function function_cancelled(){
+          document.getElementById("cancelled_func").submit();
+        }
+
+        function form_submit(){
+          document.getElementById()
+        }
+
+        function transport_student(x){
+          if (x==0){
+            document.getElementById("transport_students_radio_stage").style.display='block';
+            document.getElementById("transport_students_radio_student_number").style.display='block';
+          }
+          else{
+            document.getElementById("transport_students_radio_stage").style.display='none';
+            document.getElementById("transport_students_radio_student_number").style.display='none';
+          }
+          return;
+        }
+
+        function guest_house(x){
+          if(x==0){
+            document.getElementById("guest_House").style.display='block';
+          }
+          else
+            document.getElementById("guest_House").style.display='none';
+          return;
+        }
+
+        function func_refreshment_guest(x){
+          if(x==0){
+            document.getElementById("refreshment_guest_radio").style.display='block';
+          }
+          else
+          {
+            document.getElementById("refreshment_guest_radio").style.display='none';
+          }
+          return;
+        }
+
+        function func_refreshment_students(x){
+          if(x==0)
+            document.getElementById("refreshment_students").style.display='block';
+          else
+            document.getElementById("refreshment_students").style.display='none';
+          return;
+        }
+
+        function func_lunch(x){
+          if(x==0)
+            document.getElementById("lunch_req").style.display='block';
+          else
+            document.getElementById("lunch_req").style.display='none';
+          return;
+        }
+
+        function func_transport(x){
+          if(x==0)
+            document.getElementById("transport").style.display='block';
+          else
+            document.getElementById("transport").style.display='none';
+          return;
+        }
+
+
+        $(document).ready(function(){
+          $('#function_action').click(function() {
+            $('.sub_load').toggle("slide");
+          });
+        });
+
+      </script>
+
+    </body>
+
+  </html>
