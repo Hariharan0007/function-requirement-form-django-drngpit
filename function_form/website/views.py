@@ -70,6 +70,48 @@ def login(request):
     else:
         return render(request,'login_form.html',{})
 
+def update_function(request):
+        if request.method=="POST":
+                mailid = request.POST.get('mailid')
+                return render(request,'admin.html',{
+                        'mailid':mailid,
+                })
+
+
+def edit_form_test(request):
+        if (request.method=="POST"):
+                name = request.POST.get('name')
+                profession = request.POST.get('pro')
+                age = request.POST.get('age')
+                return render(request,'edit_test.html',{
+                        'name':name,
+                        'pro':profession,
+                        'age':age,
+                })
+        return render(request,'edit_test.html',{})
+
+def edit_function(request):
+        if request.method=="POST":
+                mailid = request.POST.get('mailid')
+                organizer_mail_id = request.POST.get('organizer_mail_id')
+                func_name = request.POST.get('func_name')
+                func_date = request.POST.get('func_date')
+                print(mailid)
+                print(organizer_mail_id)
+                print(func_name)
+                print(func_date)
+                function_models = function_model.objects.filter(func_name = func_name,func_date=func_date,organizer_mail_id = organizer_mail_id)
+                serialzer_function = function_serializer(function_models,many = True)
+                func_list = []
+                for i in serialzer_function.data:
+                        func_list.append(dict(i))
+                print(func_list)
+                return render(request,'admin.html',{
+                        'mailid':mailid,
+                        'edit_function':func_list,
+                        'view_form':'view',
+                        })
+
 def admin(request):
         if request.method=="POST":
                 func_name = request.POST.get('func_name')
@@ -461,7 +503,7 @@ def submit(request):
 
         laptop = request.POST.get('laptop')
         lcd_projector = request.POST.get('lcd_projector')
-        lunch_exact_numbers = int(request.POST.get('lunch_exact_numbers'))
+        
 
         if(request.POST.get('tiffin')!=''):
                 tiffin = int(request.POST.get('tiffin'))
@@ -469,12 +511,14 @@ def submit(request):
                 normal_lunch = int(request.POST.get('normal_lunch'))
                 spl_lunch_non_veg = int(request.POST.get('spl_lunch_non_veg'))
                 spl_lunch_veg = int(request.POST.get('spl_lunch_veg'))
+                lunch_exact_numbers = int(request.POST.get('lunch_exact_numbers'))
         else:
                 tiffin = 0
                 lunch_required_time = '00:00'
                 normal_lunch = 0
                 spl_lunch_non_veg = 0
                 spl_lunch_veg = 0
+                lunch_exact_numbers = 0
         
 
         memento = request.POST.get('memento')

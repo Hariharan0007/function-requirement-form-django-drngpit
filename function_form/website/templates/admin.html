@@ -201,15 +201,18 @@
       <input type="hidden" id="func_name" name="func_name" value="{{f.func_name}}">
     <p>Click here to download the form  <button class="btn btn-primary btn-sm" type="submit">Download</button></p>    
   </form>
-  <form action="" method="POST">
+  <form action={% url 'edit_function' %} method="POST">
     {% csrf_token %}
-    <p>Need changes ? <button class="btn btn-warning btn-sm" type="submit">Edit</button></p>
+    <input type="hidden" id="mailid" name="mailid" value="{{mailid}}">
+    <input type="hidden" id="func_name" name="func_name" value="{{f.func_name}}">
+    <input type="hidden" id="func_date" name="func_date" value="{{f.func_date}}">
+    <input type="hidden" id="organizer_mail_id" name="organizer_mail_id" value="{{ f.organizer_mail_id }}">
+    <p>Need changes ? <button class="btn btn-warning btn-sm" type="submit"><strong>Edit</strong></button></p>
   </form>
   
   </div>
 
     
-      
       
   {% if f.status == "waiting" %}
 
@@ -263,6 +266,10 @@
 
 {% if view_form == 'view' %}
 
+{% for f in edit_function %}
+{% csrf_token %}
+
+<form class="form was-validated" action={% url 'submit' %} method="POST">
       <div class="px-5 my-5 " text-white style="width:60rem;margin:0 auto;">
 
         <div class="card border-dark mb-3">
@@ -273,125 +280,48 @@
 
             <div class="mb-3">
               <label for="func_date" class="for">Date</label>
-              <input disabled type="date" class="form-control mb-3" Name="func_date" value={{date}}>
-            </div>
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#staticBackdrop">
-              Check availability
-            </button>
-
-            <!-- Modal -->
-            <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog"
-              aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Check venue availability</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <form class="form was-validated" action={% url 'check_availability' %} method="POST">
-                      {% csrf_token %}
-                      <div class="mb-3">
-                        <label for="func_date" class="for">Date</label>
-                        <input type="date" class="form-control mb-3" Name="func_date_check" required>
-                        <div class="valid-feedback">Looks good!</div>
-                        <div class="invalid-feedback">Choose date</div>
-                      </div>
-                      <div class="mb-3">
-                        <label for="time_duration_start_check" class="form-label">Starting time</label>
-                        <input type="time" class="form-control" Name="time_duration_start_check" required>
-                        <div class="valid-feedback">Good time!</div>
-                        <div class="invalid-feedback">Choose time in 24-hours format</div>
-                      </div>
-                      <div class="mb-3">
-                        <label for="time_duration_end_check" class="form-label">Ending time</label>
-                        <input type="time" class="form-control" Name="time_duration_end_check" required>
-                        <div class="valid-feedback">Good time!</div>
-                        <div class="invalid-feedback">Choose time in 24-hours format</div>
-                      </div>
-                  </div>
-                  <div class="modal-footer">
-                    <input type="hidden" id="mail_id" name="mail_id" value={{mailid}}>
-                    <button type="submit" class="btn btn-primary">Get venue</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
+              <input type="date" class="form-control mb-3" Name="func_date" value={{f.func_date}} disabled >
             </div>
 
-
-            <form class="form was-validated" action={% url 'submit' %} method="POST">
-
-              {% csrf_token %}
+            
               <div class=" mb-3">
                 <label for="venue" class="form-label">Select your venue</label>
-                <select class="shadow form-select custom-select rounded" name="venue" id="venue" required>
-                  <option value="">- - - - - - - - - -</option>
-                  {% for v in venue %}
-                  <option value="{{ v }}">{{v}}</option>
-                  {% endfor %}
+                <select class="shadow form-select custom-select rounded" name="venue" id="venue" required disabled>
+                  <option value="{{ f.venue }}">{{f.venue}}</option>
                 </select>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Choose venue</div>
 
               </div>
 
               <div class="mb-3">
-                {% if date != None %}
-                <input type="hidden" class="form-control mb-3" id="func_date" name="func_date" value="{{ date }}">
-                <input type="hidden" class="form-control" id="time_duration_func_start" name="time_duration_func_start"
-                  value="{{ start_time }}">
-                <input type="hidden" class="form-control" id="time_duration_func_end" name="time_duration_func_end"
-                  value="{{ end_time }}">
-                {% endif %}
                 <label for="func_days" class="form-label">Number of days</label>
-                <input type="number" class="form-control" name="func_days" required>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Enter number of days</div>
+                <input type="number" class="form-control" name="func_days" value="{{f.func_days}}"required>
               </div>
 
               <div class="mb-3">
                 <label for="time_duration_start" class="form-label">Starting time</label>
                 <input disabled type="time" class="form-control" id="time_duration_func_start"
-                  name="time_duration_func_start" value="{{ start_time }}">
+                  name="time_duration_func_start" value="{{ f.time_duration_start }}">
 
               </div>
 
               <div class="mb-3">
                 <label for="time_duration_end" class="form-label">Ending time</label>
                 <input disabled type="time" class="form-control" id="time_duration_func_end"
-                  name="time_duration_func_end" value="{{ end_time }}">
+                  name="time_duration_func_end" value="{{ f.time_duration_end }}">
               </div>
 
 
               <div class="mb-3">
                 <label for="Name" class="form-label">Select your department</label>
-                <select class="shadow form-select custom-select rounded" name="department" id="department" required>
-                  <option value="">- - - - - - -</option>
-                  <option value="AI & DS">AI & DS</option>
-                  <option value="BME">BME</option>
-                  <option value="CSE">CSE</option>
-                  <option value="CSBS">CSBS</option>
-                  <option value="Civil">Civil</option>
-                  <option value="ECE">ECE</option>
-                  <option value="EEE">EEE</option>
-                  <option value="Mechanical">Mechanical</option>
-                  <option value="IT">IT</option>
-                  <option value="MBA">MBA</option>
+                <select class="shadow form-select custom-select rounded" name="department" id="department" required disabled>
+                  <option value="{{f.dept_name}}">{{f.dept_name}}</option>
                 </select>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Choose department</div>
               </div>
 
 
               <div class="mb-3">
                 <label for="func_name" class="form-label">Name of the function</label>
-                <input type="text" class="form-control" Name="func_name" id="function_name" required>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Enter name of the function</div>
+                <input type="text" class="form-control" Name="func_name" id="function_name" value="{{f.func_name}}" disabled required>
               </div>
 
 
@@ -399,141 +329,120 @@
 
               <div class="mb-3">
                 <label for="training_type" class="form-label">Type of training</label>
-                <input required type="text" class="form-control" Name="train_type">
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Enter type of training</div>
+                <input required type="text" class="form-control" Name="train_type" value="{{f.training_type}}" disabled>
               </div>
 
 
               <div class="mb-3">
                 <label for="func_students" class="form-label">Number of students</label>
-                <input required type="number" class="form-control" Name="func_students">
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Enter number of students</div>
+                <input required type="number" class="form-control" Name="func_students" value="{{f.func_students}}" disabled>
               </div>
-              <div class="form-row">
-                <div class="form-group col-md-4">
-                  <label for="func_students_year">Year of Students</label>
+              <div class="form-row mb-3">
+                  <label for="func_students_year">Student year - Department - Section</label>
                   <select class="shadow form-select custom-select rounded" name="func_students_year"
-                    id="func_students_year" required>
-                    <option value="">- - - - - - -</option>
-                    <option value="I">I</option>
-                    <option value="II">II</option>
-                    <option value="III">III</option>
-                    <option value="IV">IV</option>
-                  </select>
-                  <div class="valid-feedback">Looks good!</div>
-                  <div class="invalid-feedback">Choose year</div>
-                </div>
-
-                <div class="form-group col-md-4">
-                  <label for="func_students_dept">Students department</label>
-                  <select class="shadow form-select custom-select rounded" name="func_students_dept"
-                    id="func_students_dept" required>
-                    <option value="">- - - - - - -</option>
-                    <option value="AI & DS">AI & DS</option>
-                    <option value="BME">BME</option>
-                    <option value="CSE">CSE</option>
-                    <option value="CSBS">CSBS</option>
-                    <option value="Civil">Civil</option>
-                    <option value="ECE">ECE</option>
-                    <option value="EEE">EEE</option>
-                    <option value="Mechanical">Mechanical</option>
-                    <option value="IT">IT</option>
-                    <option value="MBA">MBA</option>
-                  </select>
-                  <div class="valid-feedback">Looks good!</div>
-                  <div class="invalid-feedback">Choose department</div>
-                </div>
-
-                <div class="form-group col-md-4">
-                  <label for="func_students_class">Students class</label>
-                  <select class="shadow form-select custom-select rounded" name="func_students_class"
-                    id="func_students_class" required>
-                    <option value="">- - - - - - -</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="A & B">A & B</option>
-                  </select>
-                  <div class="valid-feedback">Looks good!</div>
-                  <div class="invalid-feedback">Choose class</div>
-                </div>
+                    id="func_students_year" disabled required>
+                    <option value="{{f.func_students_year_course}}">{{f.func_students_year_course}}</option>
+                </select>
               </div>
 
-              <div class="form-row">
 
+              {% if f.transport_students != 'no' %} 
+              <div class="form-row">
                 <div class="form-group col-md-4">
                   <label class="form-label">Transport required for students</label>
                   <div class="custom-control custom-radio">
                     <input class="form-check-input" type="radio" name="transport_students" id="transport_students"
-                      value="yes" onclick="transport_student(0)" required>
+                      value="yes" checked required>
                     <label class="form-check-label" for="transport_students">Yes</label>
                   </div>
                   <div class="custom-control custom-radio">
                     <input class="form-check-input" type="radio" name="transport_students" id="transport_students"
-                      value="no" onclick="transport_student(1)" required>
+                      value="no" required>
                     <label class="form-check-label" for="transport_students">No</label>
                   </div>
                 </div>
+                
 
                 
                 <!-- <div class="collapse"></div> -->
                 <div class="form-group col-md-4" id="transport_students_radio_stage">
                   <label for="transport_students_stage" class="form-label">Name of stage </label>
-                  <input type="text" class="form-control" Name="transport_students_stage" id="transport_students_stage">
-                  <div class="valid-feedback">If yes,please fill out</div>
+                  <input type="text" class="form-control" Name="transport_students_stage" id="transport_students_stage" value="{{f.transport_students_stage}}" readonly>
                 </div>
 
                 <div class="form-group col-md-4" id="transport_students_radio_student_number">
                   <label for="transport_students_number" class="form-label">Number of students </label>
-                  <input type="number" class="form-control" Name="transport_students_number" id="transport_students_number">
-                  <div class="valid-feedback">If yes,please fill out</div>
+                  <input type="number" class="form-control" Name="transport_students_number" id="transport_students_number" value="{{f.transport_students_number}}" readonly>
                 </div>
 
               </div>
 
+              {% else %}
+
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label class="form-label">Transport required for students</label>
+                  <div class="custom-control custom-radio">
+                    <input class="form-check-input" type="radio" name="transport_students" id="transport_students"
+                      value="yes" disabled >
+                    <label class="form-check-label" for="transport_students">Yes</label>
+                  </div>
+                  <div class="custom-control custom-radio">
+                    <input class="form-check-input" type="radio" name="transport_students" id="transport_students"
+                      value="no" checked disabled>
+                    <label class="form-check-label" for="transport_students">No</label>
+                  </div>
+                </div>
+                
+
+                
+                <!-- <div class="collapse"></div> -->
+                <div class="form-group col-md-4" id="transport_students_radio_stage">
+                  <label for="transport_students_stage" class="form-label">Name of stage </label>
+                  <input type="text" class="form-control" Name="transport_students_stage" id="transport_students_stage" value="{{f.transport_students_stage}}" readonly>
+                </div>
+
+                <div class="form-group col-md-4" id="transport_students_radio_student_number">
+                  <label for="transport_students_number" class="form-label">Number of students </label>
+                  <input type="number" class="form-control" Name="transport_students_number" id="transport_students_number" value="{{f.transport_students_number}}" readonly>
+                </div>
+
+              </div>
+
+              {% endif %}
+
 
               <div class="mb-3">
                 <label for="chief_guest_name" class="form-label">Name of the chief guest</label>
-                <input required type="text" class="form-control" Name="chief_guest_name">
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Enter name of the chief guest</div>
+                <input type="text" class="form-control" Name="chief_guest_name" value="{{f.chief_guest_name}}" readonly>
               </div>
 
 
               <div class="mb-3">
                 <label for="designation" class="form-label">Designation</label>
-                <input required type="text" class="form-control" Name="designation">
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Enter designation</div>
+                <input type="text" class="form-control" Name="designation" value="{{f.designation}}" readonly>
               </div>
 
 
               <div class="form-group">
                 <label for="field">Select field</label>
-                <select class="form-select custom-select rounded" id="field_type" name="field_type" required>
-                  <option value="">Choose...</option>
+                <select class="form-select custom-select rounded" id="field_type" name="field_type" disabled>
+                  <option value="{{f.field_type}}">{{f.field_type}}</option>
                   <option value="College">College</option>
                   <option value="Industry">Industry</option>
                 </select>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Choose field</div>
               </div>
 
 
               <div class="mb-3">
                 <label for="organizer_name" class="form-label">Name of the organizer</label>
-                <input required type="text" class="form-control" Name="organizer_name">
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Enter name of the organizer</div>
+                <input required type="text" class="form-control" Name="organizer_name" value="{{f.organizer_name}}" readonly>
               </div>
 
 
               <div class="mb-3">
                 <label for="organizer_contact" class="form-label">Contact number of the organizer</label>
-                <input required type="number" class="form-control" Name="organizer_contact">
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Enter contact number of the organizer</div>
+                <input required type="number" class="form-control" Name="organizer_contact" value="{{f.organizer_contact}}" readonly>
               </div>
 
           </div>
@@ -554,13 +463,6 @@
                 value="no" onclick="guest_house(1)" required checked>
               <label class="form-check-label" for="guestHouse">No</label>
             </div>
-            
-
-
-            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#guest_house_pd"
-              aria-expanded="false" aria-controls="collapseExample">
-              Required
-            </a>-->
 
 
             <div class="form was-validated collapse mb-3" id="guest_House"> 
@@ -672,12 +574,6 @@
               </div>
 
 
-            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#refreshment_students"
-              aria-expanded="false" aria-controls="collapseExample">
-              Required
-            </a> -->
-
-
             <div class="collapse ma-3" id="refreshment_students">
               <div class="form was-validated ">
 
@@ -730,12 +626,6 @@
                 <label class="form-check-label" for="lunch_radio">No</label>
               </div>
               </div>
-
-
-            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#lunch_req"
-              aria-expanded="false" aria-controls="collapseExample">
-              Required
-            </a> -->
 
             <div class="collapse ma-3" id="lunch_req">
               <div class="form was-validated well">
@@ -830,13 +720,6 @@
               </div>
               </div>
 
-
-            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#transport" aria-expanded="false"
-              aria-controls="collapseExample">
-              Required
-            </a> -->
-
-            
             <div class="form was-validated collapse mb-3" id="transport">
               <div class="well">
 
@@ -1017,13 +900,13 @@
               </div>
               <div class="form-group col-md-4">
                 <label for="memento_worth" class="form-label">Worth</label>
-                <input required type="number" class="form-control" Name="memento_worth" maxlength="5">
+                <input  maxlength="6" type="number" class="form-control" Name="memento_worth" value="{{f.memento_worth}}" required >
                 <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback">Enter worth of the memento(₹1000 - ₹10,000)</div>
               </div>
               <div class="form-group col-md-4">
                 <label for="memento_quantity" class="form-label">Quantity </label>
-                <input required type="number" class="form-control" Name="memento_quantity">
+                <input required type="number" class="form-control" Name="memento_quantity" value="{{f.memento_quantity}}">
                 <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback">Enter quantity</div>
               </div>
@@ -1032,21 +915,21 @@
             <div class="form-row">
               <div class="form-group col-md-4">
                 <label for="seating_arrangement_numbers" class="form-label">Number of seating arrangements</label>
-                <input required type="number" class="form-control" Name="seating_arrangement_numbers">
+                <input required type="number" class="form-control" Name="seating_arrangement_numbers" value="{{f.seating_arrangement_numbers}}">
                 <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback">Enter number of seating arrangements</div>
               </div>
 
               <div class="form-group col-md-4">
                 <label for="dias" class="form-label">Dias</label>
-                <input required type="text" class="form-control" Name="dias">
+                <input required type="text" class="form-control" Name="dias" value="{{f.dias}}">
                 <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback">Enter number of person in dias</div>
               </div>
 
               <div class="form-group col-md-4">
                 <label for="audience" class="form-label">Audience</label>
-                <input required type="text" class="form-control" Name="audience">
+                <input required type="text" class="form-control" Name="audience" value="{{f.audience}}">
                 <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback">Enter number of audiende</div>
               </div>
@@ -1054,14 +937,14 @@
 
             <div class="mb-3">
               <label for="table_cloth_number" class="form-label">Number of table cloth</label>
-              <input required type="text" class="form-control" Name="table_cloth_number">
+              <input required type="text" class="form-control" Name="table_cloth_number" value="{{f.table_cloth_number}}">
               <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback">Enter number of table cloth</div>
             </div>
 
             <div class="mb-3">
               <label for="reception_item_rec" class="form-label">Receptiom item requirements</label>
-              <input required type="text" class="form-control" Name="reception_item_rec">
+              <input required type="text" class="form-control" Name="reception_item_rec" value="{{f.reception_item_rec}}">
               <div class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Enter the reception item requirements</div>
             </div>
@@ -1074,7 +957,7 @@
 
           <input type="hidden" id="mail_id" name="mail_id" value={{mailid}}>
           <div class="container my-3">
-            <button type="submit" class="btn btn-primary btn-lg" name="function_action" id="function_action" value="submit">Preview & Submit</button>
+            <button type="submit" class="btn btn-primary btn-lg" name="function_action" id="function_action" value="submit">Update</button>
           </div>
 
           <div class="sub_load" style="display:none;" id="submit_load">
@@ -1099,13 +982,14 @@
           </div>
           
         </div>
-          <!-- <button type="button"  class="btn btn-outline-success btn-lg" data-toggle="modal" data-target="#submit_preview" >Submit</button> -->
         </div>
 
         
       </div>
 
       </form>
+
+      {% endfor %}
       
       {% endif %}
 

@@ -27,7 +27,21 @@ DEBUG = True
 # DEBUG = False
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['127.0.0.1','localhost']
+# ALLOWED_HOSTS = ['127.0.0.1','localhost','30be-2409-4072-6d1e-852b-a5a0-596b-5dd5-f928.in.ngrok.io']
+
+ALLOWED_HOSTS = ["127.0.0.1","localhost","9b92-2409-4072-6d1e-852b-2964-55c0-b070-d110.in.ngrok.io"]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_CREDENTIALS = True
+
+
+CSRF_TRUSTED_ORIGINS = ["https://9b92-2409-4072-6d1e-852b-2964-55c0-b070-d110.in.ngrok.io"]
+
+CORS_REPLACE_HTTPS_REFERER = True
+
 
 
 # Application definition
