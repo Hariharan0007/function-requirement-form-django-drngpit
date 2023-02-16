@@ -99,9 +99,10 @@
     
     <div class="mb-3">
     <label for="mail_id" class="form-label">Mail id</label>
-    <input type="email" class="shadow form-control rounded" Name="mail_id" id="mail_id" required>
-    <div class="valid-feedback">Looks good!</div>
-    <div class="invalid-feedback">Enter your mail id</div>
+    <input type="email" class="shadow form-control rounded" Name="mail_id" id="mail_id" pattern=".+@drngpit\.ac\.in" required>
+    <div class="valid-feedback" id="valid_feedback">Looks good!</div>
+    <div class="invalid-feedback" id="invalid_feedback">Enter your mail id</div>
+    <div class="invalid-feedback" id="match_domain" >Use your organisational mail id</div>
   </div>
     
     
@@ -117,7 +118,7 @@
   </div>
       
   <div class="d-grid gap-2">
-    <button type="submit"  class="btn btn-outline-primary">Login</button>
+    <button type="submit" id="login_btn" class="btn btn-outline-primary">Login</button>
     </div>
   </form>
   </div>
@@ -203,6 +204,22 @@
       document.getElementById('feedback_report').style.color = 'red';
       document.getElementById('feedback_report').innerHTML = 'new password is not matching'
       document.getElementById('change_password_btn').style.display='none';
+    }
+  }
+
+  function testEmail(string) {
+    var regex = /.+@drngpit.ac.in$/i;
+    return regex.test(string);
+}
+
+
+  function domain_validation(){
+    var mail = document.getElementById("mail_id").value;
+    if(!testEmail(values.mail_id)){
+      document.getElementById("match_domain").style.display=block;
+    }
+    else{
+      document.getElementById("valid_feedback").style.display=block;
     }
   }
 
