@@ -25,18 +25,19 @@ class venue_model(models.Model):
 
 class booking_model(models.Model):
     class Meta:
-        unique_together = (('venue','booking_date','starting_time'),)
+        unique_together = (('venue','booking_date','booking_end_date','session'),)
     venue = models.CharField(max_length=60)
     booking_date = models.DateField()
+    booking_end_date = models.DateField()
     starting_time = models.TimeField()
     ending_time = models.TimeField()
-    duration = models.IntegerField(null=True)
-    days = models.IntegerField(null=True)
+    session = models.CharField(max_length=25,null=True)
+    func_days = models.IntegerField(null=True)
     status = models.CharField(max_length=25,null=True)
     
 
     def __str__(self):
-        return self.venue + "   --  " + str(self.booking_date) + "  --  " + str(self.starting_time)
+        return self.venue + "   --  " + str(self.booking_date) + "  --  " + str(self.booking_end_date) + " -- " + self.session
 
 class function_model(models.Model):
     ac_arrangement = models.CharField(max_length=5)
@@ -71,6 +72,7 @@ class function_model(models.Model):
     organizer_name = models.CharField(max_length=25)
     payment_through = models.CharField(max_length=35)
     photography = models.CharField(max_length=5)
+    photographer = models.CharField(max_length=50,null=True)
     reception_item_rec = models.CharField(max_length=200)
     refreshment_for_guest = models.CharField(max_length=5)
     refreshment_for_guest_number = models.IntegerField()
