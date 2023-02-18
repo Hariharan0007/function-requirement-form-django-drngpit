@@ -5,7 +5,7 @@ from docx import Document
 import re
 from function_form import settings
 import time
-from datetime import datetime
+from datetime import datetime,date,timedelta
 from docx2pdf import convert
 from django.http import HttpResponse, Http404
 # from django.contrib .staticfiles.storage import staticfiles_storage
@@ -344,17 +344,84 @@ def function_list():
 
 
 def check_availability(request):
-    func_date = request.POST.get('func_date_check')
+    func_start_date = request.POST.get('func_start_date_check')
+    func_end_date = request.POST.get('func_end_date_check')
     start_time = request.POST.get('time_duration_start_check')
     end_time = request.POST.get('time_duration_end_check')
+    session = request.POST.get('session')
     mail_id = request.POST.get('mail_id')
+    func_days = 0
 
-    booking_models = booking_model.objects.filter(booking_date = func_date,starting_time = start_time,ending_time = end_time)
-    serializer_booking = booking_serializer(booking_models,many=True)
-    booked_venue = []
+    print("Function start date ==>",func_start_date)
+    print("Function end date ==>",func_end_date)
+    print(session)
+
+    func_st = str(func_start_date).split('-')
+    func_end = str(func_end_date).split('-')
+
+    month_list = ["January","Feburary","March","April","May","June","July","August","September","October","November","December"]
+    month = month_list[(int(func_st[1])-1)]
+
+    print(month)
+
+    func_dates = []
+
+    start_date = date(int(func_st[0]), int(func_st[1]), int(func_st[2]))
+    end_date = date(int(func_end[0]), int(func_end[1]), int(func_end[2]))
+    delta = timedelta(days=1)
+    print("CHECK===>>>>",start_date <= end_date)
+
+    while start_date <= end_date:  # func_st[1]
+        func_dates.append(datetime.strftime(start_date, '%Y-%m-%d'))
+        start_date += delta
+        func_days+=1
+           
+    print("Func days : >>>",func_days)
     
-    for data in serializer_booking.data:
-        booked_venue.append(dict(data)['venue'])
+    booking_models = booking_model.objects.filter(month=month)
+    serializer_booking = booking_serializer(booking_models,many=True)
+
+    date_collections = []
+    temp_date = []
+    for date_data in serializer_booking.data:
+           temp_date.append(dict(date_data)['booking_date'])
+           temp_date.append(dict(date_data)['func_days'])
+           date_collections.append(temp_date)
+           temp_date=[]
+
+    # date_collections=[['2023-02-02',2],['2023-02-06',4],['2023-02-16',1]]
+
+    bulk_date_collection = []
+    temp_date=[]
+    for dates in date_collections:
+        for i in range(dates[1]):
+            temp_date.append((datetime.strptime(dates[0], '%Y-%m-%d').date() + timedelta(i)).isoformat())
+        #     print((datetime.strptime(dates[0], '%Y-%m-%d').date() + timedelta(i)).isoformat())
+        bulk_date_collection.append(temp_date)
+        temp_date=[]
+
+    print('func_dates==>',func_dates)       
+    print(bulk_date_collection)
+
+    diff_venue_count = 0
+    diff_booked_date = []
+    for fn_date in bulk_date_collection:
+        for f_date in fn_date:
+            if f_date in func_dates:
+                if f_date not in diff_booked_date:
+                    diff_booked_date.append(fn_date[0])
+                    diff_venue_count+=1
+                #     print(fn_date[0])
+                break
+    print(diff_booked_date)
+                    
+    booked_venue = []
+    for booked_date in diff_booked_date:
+        booking_models = booking_model.objects.filter(booking_date=booked_date)
+        serializer_booking = booking_serializer(booking_models,many=True)
+        
+        for data in serializer_booking.data:
+            booked_venue.append(dict(data)['venue'])
     
     print("BV===>",booked_venue)
     venue_models = venue_model.objects.all()
@@ -374,14 +441,25 @@ def check_availability(request):
 
     print("FV==>",free_venue)
 
+    # return render(request,'function_form.html',{
+    #        'view_form':'view',
+    #        "mailid":mail_id,
+    # })
+
     return render(request,'function_form.html',{
         'venue':free_venue,
-        'date':func_date,
+        'start_date':func_start_date,
+        'end_date':func_end_date,
+        'func_month':month,
         'start_time':start_time,
         'end_time':end_time,
+        'func_days':func_days,
+        'session':session,
         'mailid':mail_id,
         'view_form':'view',
         })
+
+
 
 def add_new(request):
         if request.method=="POST":
@@ -481,11 +559,22 @@ def submit(request):
         dias = int(request.POST.get('dias'))
         field_type = request.POST.get('field_type')
         func_date = request.POST.get('func_date')
+        # newly added start
+        func_start_date=func_date
+        func_end_date = request.POST.get('function_end_date')
+        func_month = request.POST.get('func_on_month')
+        session = request.POST.get('func_session')
+        # newly added end
         print("date--------->",func_date)
         func_days = int(request.POST.get('func_days'))
         func_name = request.POST.get('func_name')
         func_students = request.POST.get('func_students')
-        func_students_year_course = request.POST.get('func_students_year') + "-" + request.POST.get('func_students_dept') + "-" + request.POST.get('func_students_class')
+        func_students_external = request.POST.get('func_students_external')
+        func_students_external_class = request.POST.get('func_students_external_class')
+        if (request.POST.get('func_students_dept')!=None):
+                func_students_year_course = request.POST.get('func_students_year') + " - " + request.POST.get('func_students_dept') + " - " + request.POST.get('func_students_class')
+        else:
+               func_students_year_course = request.POST.get('func_students_year')
 
 
         if(request.POST.get('guest_house_persons')==''):
@@ -531,6 +620,10 @@ def submit(request):
         organizer_name = request.POST.get('organizer_name')
         payment_through = request.POST.get('payment_through')
         photography = request.POST.get('photography')
+        if(photography=="Yes"):
+                photographer=request.POST.get('photographer')
+        else:
+                photographer= "---"
         reception_item_rec = request.POST.get('reception_item_rec')
 
         # refreshment_for_guest = request.POST.get('refreshment_for_guest')
@@ -605,6 +698,7 @@ def submit(request):
         type_of_mic = request.POST.get('type_of_mic')
         venue = request.POST.get('venue')
         status = "waiting"
+        remarks = "No remarks"
 
         named_tuple = time.localtime()
         print(named_tuple)
@@ -626,7 +720,7 @@ def submit(request):
                         for i in string.split(' '):
                                 if i!='':
                                         temp.append(i)
-                        #print(temp)
+                        # print(temp)
                         temp_str = ""
                         for string in temp:
                                 if string=="ac_ar":
@@ -652,7 +746,13 @@ def submit(request):
                                 elif string=="func_stud":
                                         temp_str +=    str(func_students) 
                                 elif string=="fsyc":
-                                        temp_str +=   func_students_year_course 
+                                        temp_str +=   func_students_year_course
+                                elif string=="func_st":
+                                        temp_str +=   func_students_external
+                                elif string=="_u":
+                                       temp_str += " "
+                                elif string=="fsy":
+                                        temp_str +=   func_students_external_class 
                                 elif string=="gh":
                                         temp_str +=   guest_house 
                                 elif string=="ghd":
@@ -690,13 +790,15 @@ def submit(request):
                                 elif string=="pymt":
                                         temp_str +=   payment_through 
                                 elif string=="pic":
-                                        temp_str +=   photography 
+                                        temp_str +=   photography
+                                elif string=="ptg":
+                                        temp_str +=   photographer 
                                 elif string=="reception_item_req":
                                         temp_str +=   reception_item_rec 
                                 elif string=="r_g":
                                         temp_str +=    str(refreshment_for_guest)  + "   " + "Tea : " +   str(refreshment_guest_tea)  + "    " + "Coffee : " +   str(refreshment_guest_coffee)  + "      " + "Snacks : " +   str(refreshment_guest_snacks)
                                 elif string=="-gtm-":
-                                        temp_str +="           : " +  refreshment_for_guest_time
+                                        temp_str +="                        : " +  refreshment_for_guest_time
                                 elif string=="-rs-":
                                         temp_str +=    str(refreshment_for_student)  + "   " + "Tea : " +   str(refreshment_student_tea)  + "    " + "Coffee : " +   str(refreshment_student_coffee)  + "      " + "Snacks : " +   str(refreshment_student_snacks)
                                 elif string=="--s-":
@@ -763,6 +865,8 @@ def submit(request):
             func_days = func_days,
             func_name = func_name,
             func_students = func_students,
+            func_students_external = func_students_external,
+            func_students_external_class = func_students_external_class,
             func_students_year_course = func_students_year_course,
             guest_house = guest_house,
             guest_house_days = guest_house_days,
@@ -784,6 +888,7 @@ def submit(request):
             organizer_name = organizer_name,
             payment_through = payment_through,
             photography = photography,
+            photographer = photographer,
             reception_item_rec = reception_item_rec,
             refreshment_for_guest = refreshment_for_guest,
             refreshment_for_guest_number = refreshment_for_guest_number,
@@ -818,9 +923,12 @@ def submit(request):
             type_of_mic = type_of_mic,
             venue = venue,
             time_stamp = time_stamp,
+            remarks = remarks,
             status = status,
             document_pdf = doc_file,
         )
+
+        preview_location = func_name + ".pdf" 
 
         # print("Form action ====>>>",request.POST.get('form_action'))
         # doc_path = os.path.join(settings.BASE_DIR,'static/function_form/files/form.docx')
@@ -829,6 +937,33 @@ def submit(request):
         # print(doc_path)
         # doc = Document(doc_path)
 
+        if(request.POST.get('function_edit')=='edit_func'):
+                admin_mail = request.POST.get('mail_id')
+                function_model.objects.filter(func_name = func_name,organizer_mail_id = organizer_mail_id,func_date = func_date).delete()
+                msg_sub = "Function form - " + func_name + " - Booking Updated !!! "
+                msg_body = "The function form for booking "+venue+" on "+func_date+" were successfully updated."
+                mail_status = "not_sent"
+                if(send_mail(organizer_mail_id,func_name,msg_sub,msg_body,doc_file)):
+                        mail_status = "sent"
+                reg.save()
+                # function_models = function_model.objects.all()
+                # serializer_function = function_serializer(function_models,many = True)
+                # func_list = []
+                # for i in serializer_function.data:
+                #         func_list.append(dict(i))
+                # if(len(func_list)==0):
+                #         function = "none"
+                # else:
+                #         function = func_list
+                print("Function Updated to database !!!!!!! ",reg)
+                return render(request,'admin.html',{
+                       'mailid':admin_mail,
+                       'function':function,
+                       'document':preview_location,
+                       'mail_status':mail_status,
+                })
+
+
                 
         reg.save()
         print("Function saved to database !!!!!!! ",reg)
@@ -836,8 +971,12 @@ def submit(request):
         b_reg = booking_model(
         venue = venue,
         booking_date = func_date,
+        booking_end_date = func_end_date,
         starting_time = time_duration_start,
         ending_time = time_duration_end,
+        session = session,
+        month = func_month,
+        func_days = func_days,
         status = "waiting",
         )
 
@@ -860,7 +999,7 @@ def submit(request):
                 mail_status = "sent"
 
 
-        preview_location = func_name + ".pdf" 
+
         return render(request,'function_form.html',{
                 'mailid':organizer_mail_id,
                 'document':preview_location,

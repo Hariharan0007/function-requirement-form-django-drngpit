@@ -112,22 +112,12 @@
       </div>
 
       {% if mail_status == "sent" %}
-      <div class="alert alert-success" role="alert">
-        <p class="text-center">Successfully submitted the form and the mail is sent to you !!!</p>
+      
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <center><strong>Booking successfull !!!</strong> The acknowledgement sent to your mail.</center>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>
-      {% endif %}
-
-      {% if submission == True %}
-
-      <div class="alert alert-success" role="alert">
-        <p class="text-center">Successfully submitted the form !!!</p>
-      </div>
-      {% elif submission == "Exists" %}
-      <div class="alert alert-warning" role="alert">
-        <p class="text-center">Form already submitted !!!</p>
       </div>
 
       {% endif %}
@@ -154,8 +144,16 @@
 
 
             <div class="mb-3">
-              <label for="func_date" class="for">Date</label>
-              <input disabled type="date" class="form-control mb-3" Name="func_date" value={{date}}>
+              <label for="func_date" class="for">Starting Date</label>
+              <input disabled type="date" class="form-control mb-3" Name="func_date" value={{start_date}}>
+            </div>
+            <div class="mb-3">
+              <label for="func_end_date" class="for">Ending Date</label>
+              <input disabled type="date" class="form-control mb-3" Name="func_end_date" value={{end_date}}>
+            </div>
+            <div class="mb-3">
+              <label for="func_month" class="for">Function Month</label>
+              <input disabled type="text" class="form-control mb-3" Name="func_month" value={{func_month}}>
             </div>
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#staticBackdrop">
@@ -177,11 +175,40 @@
                     <form class="form was-validated" action={% url 'check_availability' %} method="POST">
                       {% csrf_token %}
                       <div class="mb-3">
-                        <label for="func_date" class="for">Date</label>
-                        <input type="date" class="form-control mb-3" Name="func_date_check" required>
+                        <label for="func_date" class="for">Function start date</label>
+                        <input type="date" class="form-control mb-3" id="check_date" Name="func_start_date_check" onchange="month_fixer()" required>
                         <div class="valid-feedback">Looks good!</div>
-                        <div class="invalid-feedback">Choose date</div>
+                        <div class="invalid-feedback">Choose starting date</div>
                       </div>
+                      <div class="mb-3">
+                        <label for="func_date" class="for">Function end date</label>
+                        <input type="date" class="form-control mb-3" Name="func_end_date_check" required>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Choose ending date</div>
+                      </div>
+                      
+
+                      <!-- <div class="mb-3">
+                        <label for="month" class="form-label">Select function month</label>
+                        <select class="shadow form-select custom-select rounded" name="func_month" id="func_month" disabled required>
+                          <option value="">- - - - - - -</option>
+                          <option value="January">January</option>
+                          <option value="Feburary">Feburary</option>
+                          <option value="March">March</option>
+                          <option value="April">April</option>
+                          <option value="May">May</option>
+                          <option value="June">June</option>
+                          <option value="July">July</option>
+                          <option value="August">August</option>
+                          <option value="September">September</option>
+                          <option value="October">October</option>
+                          <option value="November">November</option>
+                          <option value="December">December</option>
+                        </select>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Choose function month</div>
+                      </div> -->
+
                       <div class="mb-3">
                         <label for="time_duration_start_check" class="form-label">Starting time</label>
                         <input type="time" class="form-control" Name="time_duration_start_check" required>
@@ -194,6 +221,35 @@
                         <div class="valid-feedback">Good time!</div>
                         <div class="invalid-feedback">Choose time in 24-hours format</div>
                       </div>
+                      
+                      <div>
+                        <label class="form-label">Session</label>
+                        <div class="row">
+                          <div class="col md-4">
+                          <div class="custom-control custom-radio">
+                            <input class="form-check-input" type="radio" name="session" id="session" value="Forenoon" required>
+                            <label class="form-check-label" for="session">Forenoon</label>
+                          </div>
+                        </div>
+
+                        <div class="col md-4">
+                          <div class="custom-control custom-radio">
+                            <input class="form-check-input" type="radio" name="session" id="session" value="Afternoon" required>
+                            <label class="form-check-label" for="session">Afternoon</label>
+                          </div>
+                        </div>
+
+                        <div class="col md-4">
+                          <div class="custom-control custom-radio">
+                            <input class="form-check-input" type="radio" name="session" id="session" value="Fullday" required>
+                            <label class="form-check-label" for="session">Fullday</label>
+                          </div>
+                        </div>
+
+
+                        </div>
+                      </div>
+
                   </div>
                   <div class="modal-footer">
                     <input type="hidden" id="mail_id" name="mail_id" value={{mailid}}>
@@ -222,15 +278,17 @@
               </div>
 
               <div class="mb-3">
-                {% if date != None %}
-                <input type="hidden" class="form-control mb-3" id="func_date" name="func_date" value="{{ date }}">
-                <input type="hidden" class="form-control" id="time_duration_func_start" name="time_duration_func_start"
-                  value="{{ start_time }}">
-                <input type="hidden" class="form-control" id="time_duration_func_end" name="time_duration_func_end"
-                  value="{{ end_time }}">
+                {% if start_date != None %}
+                <input type="hidden" class="form-control mb-3" id="func_date" name="func_date" value="{{ start_date }}">
+                <input type="hidden" class="form-control mb-3" id="function_end_date" name="function_end_date" value="{{ end_date }}">
+                <input type="hidden" class="form-control" id="time_duration_func_start" name="time_duration_func_start" value="{{ start_time }}">
+                <input type="hidden" class="form-control" id="time_duration_func_end" name="time_duration_func_end"  value="{{ end_time }}">
+                <input type="hidden" class="form-control mb-3" id="func_on_month" name="func_on_month" value="{{ func_month }}">
+                <input type="hidden" class="form-control mb-3" id="func_days" name="func_days" value="{{ func_days }}">
+                <input type="hidden" class="form-control mb-3" id="func_seesion" name="func_session" value="{{ session }}">
                 {% endif %}
                 <label for="func_days" class="form-label">Number of days</label>
-                <input type="number" class="form-control" name="func_days" required>
+                <input type="number" class="form-control" name="func_days" value={{func_days}} disabled >
                 <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback">Enter number of days</div>
               </div>
@@ -286,15 +344,46 @@
                 <div class="invalid-feedback">Enter type of training</div>
               </div>
 
+              <div class="form-row mb-3 ">
 
-              <div class="mb-3">
-                <label for="func_students" class="form-label">Number of students</label>
-                <input required type="number" class="form-control" Name="func_students">
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Enter number of students</div>
-              </div>
-              <div class="form-row">
                 <div class="form-group col-md-4">
+                  <label for="func_students" class="form-label">Number of students - Internal</label>
+                  <input required type="number" class="form-control" Name="func_students">
+                  <div class="valid-feedback">Looks good!</div>
+                  <div class="invalid-feedback">Enter number of internal students</div>
+                </div>
+  
+                <div class="form-group col-md-4">
+                  <label for="func_students_external" class="form-label">Number of students - External</label>
+                  <input required type="number" class="form-control" Name="func_students_external" aria-describedby="external_stud_helper">
+                  <small id="external_stud_helper" class="form-text text-muted">Mention "0" if no external students</small>
+                  <div class="valid-feedback">Looks good!</div>
+                  <div class="invalid-feedback">Enter number of external students</div>
+                </div>
+
+                <div class="form-group col-md-4">
+                  <label for="func_students_external_class" class="form-label">Class details of external students</label>
+                  <input required type="text" class="form-control" Name="func_students_external_class" aria-describedby="external_stud_class_helper">
+                  <small id="external_stud_class_helper" class="form-text text-muted">Mention "NA" if not mentioing details</small>
+                  <div class="valid-feedback">Looks good!</div>
+                  <div class="invalid-feedback">Enter class details of external students</div>
+                </div>
+
+              </div>
+              
+
+
+              <div class="form-row">
+
+                <div class="form-group col-md-4">
+                  <label for="func_students_year" class="form-label">Year of Students</label>
+                  <input type="text" style="text-transform:uppercase;" class="form-control" Name="func_students_year" id="func_students_year" required aria-describedby="func_years_help">
+                  <small id="func_years_help" class="form-text text-muted">Use 'I' to denote year and '&' to seperate.(Other special characters will not be allowed)</small>
+                  <div class="invalid-feedback">Enter the year of students</div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+
+                <!-- <div class="form-group col-md-4">
                   <label for="func_students_year">Year of Students</label>
                   <select class="shadow form-select custom-select rounded" name="func_students_year"
                     id="func_students_year" required>
@@ -306,7 +395,7 @@
                   </select>
                   <div class="valid-feedback">Looks good!</div>
                   <div class="invalid-feedback">Choose year</div>
-                </div>
+                </div> -->
 
                 <div class="form-group col-md-4">
                   <label for="func_students_dept">Students department</label>
@@ -348,12 +437,12 @@
                   <label class="form-label">Transport required for students</label>
                   <div class="custom-control custom-radio">
                     <input class="form-check-input" type="radio" name="transport_students" id="transport_students"
-                      value="yes" onclick="transport_student(0)" required>
+                      value="Yes" onclick="transport_student(0)" required>
                     <label class="form-check-label" for="transport_students">Yes</label>
                   </div>
                   <div class="custom-control custom-radio">
                     <input class="form-check-input" type="radio" name="transport_students" id="transport_students"
-                      value="no" onclick="transport_student(1)" required checked>
+                      value="No" onclick="transport_student(1)" required checked>
                     <label class="form-check-label" for="transport_students">No</label>
                   </div>
                 </div>
@@ -409,18 +498,18 @@
 
 
               <div class="mb-3">
-                <label for="organizer_name" class="form-label">Name of the organizer</label>
+                <label for="organizer_name" class="form-label">Name of the staff</label>
                 <input required type="text" class="form-control" Name="organizer_name">
                 <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Enter name of the organizer</div>
+                <div class="invalid-feedback">Enter name of the staff</div>
               </div>
 
 
               <div class="mb-3">
-                <label for="organizer_contact" class="form-label">Contact number of the organizer</label>
+                <label for="organizer_contact" class="form-label">Contact number of the staff</label>
                 <input required type="number" class="form-control" Name="organizer_contact">
                 <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Enter contact number of the organizer</div>
+                <div class="invalid-feedback">Enter contact number of the staff</div>
               </div>
 
           </div>
@@ -484,6 +573,7 @@
 
 
                 </div>
+                
               </div>
             </div>
 
@@ -516,7 +606,7 @@
                   <div class="form-group col-md-6">
                     <label for="refreshment_for_guest_number" class="form-label">Number of person</label>
                     <input type="text" class="form-control" Name="refreshment_for_guest_number" id="r_guest_number">
-                    <div class="invalid-feedback">Enter numbervof persons</div>
+                    <div class="invalid-feedback">Enter number of persons</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
 
@@ -567,13 +657,6 @@
               </div>
               </div>
 
-
-            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#refreshment_students"
-              aria-expanded="false" aria-controls="collapseExample">
-              Required
-            </a> -->
-
-
             <div class="collapse ma-3" id="refreshment_students">
               <div class="form was-validated ">
 
@@ -612,6 +695,8 @@
                     <div class="valid-feedback">Looks good!</div>
                   </div>
                 </div>
+
+
               </div>
             </div>
 
@@ -694,7 +779,8 @@
 
 
 
-            <h5>Payment through</h5>
+            <h5 aria-describedby="payment_helper">Payment through</h5>
+            <small id="payment_helper" class="form-text text-muted">(Choose "Nill" if no amount is spent on refreshment and lunch)</small>
             <div class="form was-validated form-check custom-control custom-radio">
               <input class="form-check-input" type="radio" name="payment_through" id="payment_through"
                 value="Association Account" required>
@@ -710,7 +796,13 @@
               </label>
             </div>
 
-            
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through"
+                value="Nill" required>
+              <label class="form-check-label" for="payment_through" >
+                Nill
+              </label>
+            </div>
     
 
           </div>
@@ -804,13 +896,13 @@
               <div class="form-group col-md-4">
                 <label class="form-label">Mic arrangement</label>
                 <div class="form-check custom-control custom-radio">
-                  <input class="form-check-input" type="radio" name="mic_arrangement" id="mic_arrangement" value="yes" required checked>
+                  <input class="form-check-input" type="radio" name="mic_arrangement" id="mic_arrangement" value="Yes" required checked>
                   <label class="form-check-label" for="mic_arrangement">
                     Yes
                   </label>
                 </div>
                 <div class="form-check custom-control custom-radio">
-                  <input class="form-check-input" type="radio" name="mic_arrangement" id="mic_arrangement" value="no" required>
+                  <input class="form-check-input" type="radio" name="mic_arrangement" id="mic_arrangement" value="No" required>
                   <label class="form-check-label" for="mic_arrangement">
                     No
                   </label>
@@ -838,13 +930,13 @@
               <div class="form-group col-md-3">
                 <label class="form-label">A/c arrangement</label>
                 <div class="form-check custom-control custom-radio">
-                  <input class="form-check-input" type="radio" name="ac_arrangement" id="ac_arrangement" value="yes" required>
+                  <input class="form-check-input" type="radio" name="ac_arrangement" id="ac_arrangement" value="Yes" required>
                   <label class="form-check-label" for="ac_arrangement">
                     Yes
                   </label>
                 </div>
                 <div class="form-check custom-control custom-radio">
-                  <input class="form-check-input" type="radio" name="ac_arrangement" id="ac_arrangement" value="no" required>
+                  <input class="form-check-input" type="radio" name="ac_arrangement" id="ac_arrangement" value="No" required>
                   <label class="form-check-label" for="ac_arrangement">
                     No
                   </label>
@@ -855,13 +947,13 @@
               <div class="form-group col-md-3">
                 <label class="form-label">LCD Projector</label>
                 <div class="form-check custom-control custom-radio">
-                  <input class="form-check-input" type="radio" name="lcd_projector" id="lcd_projector" value="yes" required>
+                  <input class="form-check-input" type="radio" name="lcd_projector" id="lcd_projector" value="Yes" required>
                   <label class="form-check-label" for="lcd_projector">
                     Yes
                   </label>
                 </div>
                 <div class="form-check custom-control custom-radio">
-                  <input class="form-check-input" type="radio" name="lcd_projector" id="lcd_projector" value="no" required>
+                  <input class="form-check-input" type="radio" name="lcd_projector" id="lcd_projector" value="No" required>
                   <label class="form-check-label" for="lcd_projector">
                     No
                   </label>
@@ -871,13 +963,13 @@
               <div class="form-group col-md-3">
                 <label class="form-label">Laptop</label>
                 <div class="form-check custom-control custom-radio">
-                  <input class="form-check-input" type="radio" name="laptop" id="laptop" value="yes" required>
+                  <input class="form-check-input" type="radio" name="laptop" id="laptop" value="Yes" required>
                   <label class="form-check-label" for="laptop">
                     Yes
                   </label>
                 </div>
                 <div class="form-check custom-control custom-radio">
-                  <input class="form-check-input" type="radio" name="laptop" id="laptop" value="no" required>
+                  <input class="form-check-input" type="radio" name="laptop" id="laptop" value="No" required>
                   <label class="form-check-label" for="laptop">
                     No
                   </label>
@@ -887,13 +979,13 @@
               <div class="form-group col-md-3">
                 <label class="form-label">Photography</label>
                 <div class="form-check custom-control custom-radio">
-                  <input class="form-check-input" type="radio" name="photography" onclick="photographer_choice(0)" id="photography" onclick="photographer_choice(0)" value="yes" required>
+                  <input class="form-check-input" type="radio" name="photography" onclick="photographer_choice(0)" id="photography" onclick="photographer_choice(0)" value="Yes" required>
                   <label class="form-check-label" for="photography">
                     Yes
                   </label>
                 </div>
                 <div class="form-check custom-control custom-radio">
-                  <input class="form-check-input" type="radio" name="photography" onclick="photographer_choice(1)" id="photography" value="no" required>
+                  <input class="form-check-input" type="radio" name="photography" onclick="photographer_choice(1)" id="photography" value="No" required>
                   <label class="form-check-label" for="photography">
                     No
                   </label>
@@ -931,23 +1023,23 @@
               <div class="form-group col-md-4">
                 <label class="form-label">Memento / Honorarium to chief guest</label>
                 <div class="form-check custom-control custom-radio">
-                  <input class="form-check-input" type="radio" name="memento" id="memento" value="yes" required checked>
+                  <input class="form-check-input" type="radio" name="memento" id="memento" value="Yes" required checked>
                   <label class="form-check-label" for="memento">
                     Yes
                   </label>
                 </div>
                 <div class="form-check custom-control custom-radio">
-                  <input class="form-check-input" type="radio" name="memento" id="memento" value="no" required>
+                  <input class="form-check-input" type="radio" name="memento" id="memento" value="No" required>
                   <label class="form-check-label" for="memento">
                     No
                   </label>
                 </div>
               </div>
               <div class="form-group col-md-4">
-                <label for="memento_worth" class="form-label">Worth</label>
-                <input required type="number" class="form-control" Name="memento_worth" maxlength="5">
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Enter worth of the memento(₹1000 - ₹10,000)</div>
+                <label for="memento_worth_" class="form-label">Worth</label>
+                <input maxlength="5" type="number" class="form-control" id="memento_worth" Name="memento_worth" required>
+                <div class="valid-feedback" id="memento_valid">Looks good!</div>
+                <div class="invalid-feedback" id="memento_invalid">Enter worth of the memento(₹1000 - ₹3,000)</div>
               </div>
               <div class="form-group col-md-4">
                 <label for="memento_quantity" class="form-label">Quantity </label>
@@ -1175,8 +1267,13 @@
           if ("></\\:;!@#$%^&*()".indexOf(chr) >= 0)
               return false;
         };
-      
 
+        document.getElementById("func_students_year").onkeypress = function(e) {
+          var chr = String.fromCharCode(e.which);
+          if ("></\\:;!@#$%^-_+=[]{}|*()".indexOf(chr) >= 0)
+              return false;
+        };
+      
         function function_home(){
           document.getElementById("home_func").submit();
         }
@@ -1328,7 +1425,7 @@
           return;
         }
 
-
+        
         $(document).ready(function(){
           $('#function_action').click(function() {
             $('.sub_load').toggle("slide");

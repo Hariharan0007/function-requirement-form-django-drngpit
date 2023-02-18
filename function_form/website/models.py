@@ -25,13 +25,14 @@ class venue_model(models.Model):
 
 class booking_model(models.Model):
     class Meta:
-        unique_together = (('venue','booking_date','booking_end_date','session'),)
+        unique_together = (('venue','booking_date','booking_end_date','session','month'),)
     venue = models.CharField(max_length=60)
     booking_date = models.DateField()
-    booking_end_date = models.DateField()
+    booking_end_date = models.DateField(null=True)
     starting_time = models.TimeField()
     ending_time = models.TimeField()
     session = models.CharField(max_length=25,null=True)
+    month = models.CharField(max_length=25,null=True)
     func_days = models.IntegerField(null=True)
     status = models.CharField(max_length=25,null=True)
     
@@ -51,6 +52,8 @@ class function_model(models.Model):
     func_days = models.IntegerField()
     func_name = models.CharField(max_length=30,primary_key=True)
     func_students = models.IntegerField()
+    func_students_external = models.IntegerField(null=True)
+    func_students_external_class = models.CharField(max_length=100,null=True)
     func_students_year_course = models.CharField(max_length=30)
     guest_house = models.CharField(max_length=5)
     guest_house_days = models.IntegerField()
@@ -108,6 +111,7 @@ class function_model(models.Model):
     venue = models.CharField(max_length=50)
     status = models.CharField(max_length=25,null=True)
     time_stamp = models.CharField(max_length=50,null=True)
+    remarks = models.CharField(max_length=250,null=True)
     document_pdf = models.FileField(upload_to='media',null=True)
 
     def __str__(self):
