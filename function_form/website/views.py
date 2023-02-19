@@ -2,7 +2,6 @@ from django.shortcuts import render
 
 import os
 from docx import Document
-import pythoncom
 from function_form import settings
 import time
 from datetime import datetime,date,timedelta
