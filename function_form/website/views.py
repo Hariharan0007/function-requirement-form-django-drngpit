@@ -2,13 +2,12 @@ from django.shortcuts import render
 
 import os
 from docx import Document
-import re
+import pythoncom
 from function_form import settings
 import time
 from datetime import datetime,date,timedelta
 from docx2pdf import convert
 from django.http import HttpResponse, Http404
-# from django.contrib .staticfiles.storage import staticfiles_storage
 from .models import admin_model,staff_model,function_model,venue_model,booking_model
 from .serializers import admin_serializer,staff_serializer,function_serializer,venue_serializer,booking_serializer
 
@@ -25,7 +24,7 @@ def login(request):
     if request.method=="POST":
         if(request.POST.get('login_as')=="Admin"):
 
-            function_models = function_model.objects.all()
+            function_models = function_model.objects.all().order_by('-func_date')
             serializer_function = function_serializer(function_models,many = True)
             func_list = []
             for i in serializer_function.data:
@@ -958,7 +957,6 @@ def submit(request):
                 print("Function Updated to database !!!!!!! ",reg)
                 return render(request,'admin.html',{
                        'mailid':admin_mail,
-                       'function':function,
                        'document':preview_location,
                        'mail_status':mail_status,
                 })
@@ -987,7 +985,7 @@ def submit(request):
         # doc_file = re.sub(r"\s+","%20",doc_file)
         # print(doc_file)
 
-        function_models = function_model.objects.filter(organizer_mail_id = organizer_mail_id)
+        function_models = function_model.objects.filter(organizer_mail_id = organizer_mail_id,func_name = func_name)
         serializer_function = function_serializer(function_models,many = True)
         func_list = []
         for i in serializer_function.data:
