@@ -17,7 +17,6 @@ lxml==4.9.2
 Pillow==9.4.0
 python-docx==0.8.11
 pytz==2022.7
-pywin32==305
 screen==1.0.1
 six==1.16.0
 sqlparse==0.4.3
