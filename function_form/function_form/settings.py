@@ -29,7 +29,7 @@ DEBUG = True
 # ALLOWED_HOSTS = []
 # ALLOWED_HOSTS = ['127.0.0.1','localhost','30be-2409-4072-6d1e-852b-a5a0-596b-5dd5-f928.in.ngrok.io']
 
-ALLOWED_HOSTS = ["127.0.0.1","localhost","2ff9-2409-4072-6e03-dcaf-ac2c-2d40-ac1b-a33a.in.ngrok.io"]
+ALLOWED_HOSTS = ["127.0.0.1","localhost","functionform-drngpit.netlify.app"]
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -38,7 +38,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 
-CSRF_TRUSTED_ORIGINS = ["https://2ff9-2409-4072-6e03-dcaf-ac2c-2d40-ac1b-a33a.in.ngrok.io"]
+CSRF_TRUSTED_ORIGINS = ["https://functionform-drngpit.netlify.app"]
 
 CORS_REPLACE_HTTPS_REFERER = True
 
