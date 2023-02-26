@@ -218,6 +218,7 @@
     <form action="/download" method="POST">
       {% csrf_token %}
       <input type="hidden" id="func_name" name="func_name" value="{{f.func_name}}">
+      <input type="hidden" id="func_date" name="func_date" value="{{f.func_date}}">
     <p>Click here to download the form  <button class="btn btn-primary btn-sm" type="submit">Download</button></p>    
   </form>
   <form action={% url 'edit_function' %} method="POST">
@@ -298,10 +299,16 @@
 
 
             <div class="mb-3">
-              <label for="func_date" class="for">Date</label>
+              <label for="func_date" class="for">Starting Date</label>
               <input type="date" class="form-control mb-3" Name="func_date" value={{f.func_date}} readonly >
               <input type="hidden" id="admin_mail_id" name="admin_mail_id" value="{{ mailid }}">
               <input type="hidden" name="function_edit" value="edit_func">
+            </div>
+
+
+            <div class="mb-3">
+              <label for="func_date" class="for">Ending Date</label>
+              <input type="date" class="form-control mb-3" Name="func_date" id="func_end_date" value={{f.func_end_date}} readonly >
             </div>
 
             
@@ -348,29 +355,50 @@
 
 
 
-              <div class="mb-3">
+              <!-- <div class="mb-3">
                 <label for="training_type" class="form-label">Type of training</label>
                 <input required type="text" class="form-control" Name="train_type" value="{{f.training_type}}">
-              </div>
+              </div> -->
 
 
               <div class="mb-3">
-                <label for="func_students" class="form-label">Number of students</label>
-                <input required type="number" class="form-control" Name="func_students" value="{{f.func_students}}" >
+                <label for="training_type" class="form-label">Select training type</label>
+                <select class="shadow form-select custom-select rounded" name="train_type" id="train_type" required>
+                  <option value="">- - - - - - -</option>
+                  <option value="Alumini Lecture Series" {% if f.training_type == "Alumini Lecture Series" %}selected="selected"{% endif %}>Alumini Lecture Series</option>
+                  <option value="Academic Expert Lecture" {% if f.training_type == "Academic Expert Lecture" %}selected="selected"{% endif %}>Academic Expert Lecture</option>
+                  <option value="Awareness program" {% if f.training_type == "Awareness program" %}selected="selected"{% endif %}>Awareness program</option>
+                  <option value="Boot Camp" {% if f.training_type == "Boot Camp" %}selected="selected"{% endif %}>Boot Camp</option>
+                  <option value="Conference" {% if f.training_type == "Conference" %}selected="selected"{% endif %}>Conference</option>
+                  <option value="FDP" {% if f.training_type == "FDP" %}selected="selected"{% endif %}>FDP</option>
+                  <option value="FDTP" {% if f.training_type == "FDTP" %}selected="selected"{% endif %}>FDTP</option>
+                  <option value="Guest Lecture" {% if f.training_type == "Guest Lecture" %}selected="selected"{% endif %}>Guest Lecture</option>
+                  <option value="Hand-on-training" {% if f.training_type == "Hand-on-training" %}selected="selected"{% endif %}>Hand-on-training</option>
+                  <option value="Hackathon" {% if f.training_type == "Hackathon" %}selected="selected"{% endif %}>Hackathon</option>
+                  <option value="Ideathon" {% if f.training_type == "Ideathon" %}selected="selected"{% endif %}>Ideathon</option>
+                  <option value="Industry Lecture Series" {% if f.training_type == "Industry Lecture Series" %}selected="selected"{% endif %}>Industry Lecture Series</option>
+                  <option value="One credit course" {% if f.training_type == "One credit course" %}selected="selected"{% endif %}>One credit course</option>
+                  <option value="Seminar" {% if f.training_type == "Seminar" %}selected="selected"{% endif %}>Seminar</option>
+                  <option value="STTP" {% if f.training_type == "STTP" %}selected="selected"{% endif %}>STTP</option>
+                  <option value="Value Added Course" {% if f.training_type == "Value Added Course" %}selected="selected"{% endif %}>Value Added Course</option>
+                  <option value="Workshop" {% if f.training_type == "Workshop" %}selected="selected"{% endif %}>Workshop</option>
+                </select>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Choose Type of training</div>
               </div>
 
               <div class="form-row mb-3 ">
 
                 <div class="form-group col-md-4">
                   <label for="func_students" class="form-label">Number of students - Internal</label>
-                  <input required type="number" class="form-control" Name="func_students" value="{{f.func_students}}">
+                  <input required type="number" class="form-control" Name="func_students" value="{{f.func_students}}" readonly>
                   <div class="valid-feedback">Looks good!</div>
                   <div class="invalid-feedback">Enter number of internal students</div>
                 </div>
   
                 <div class="form-group col-md-4">
                   <label for="func_students_external" class="form-label">Number of students - External</label>
-                  <input required type="number" class="form-control" Name="func_students_external" aria-describedby="external_stud_helper" value="{{f.func_students_external}}">
+                  <input required type="number" class="form-control" Name="func_students_external" aria-describedby="external_stud_helper" value="{{f.func_students_external}}" readonly>
                   <small id="external_stud_helper" class="form-text text-muted">Mention "0" if no external students</small>
                   <div class="valid-feedback">Looks good!</div>
                   <div class="invalid-feedback">Enter number of external students</div>
@@ -451,13 +479,13 @@
               </div>
 
               <div class="mb-3">
-                <label for="organizer_name" class="form-label">Name of the organizer</label>
+                <label for="organizer_name" class="form-label">Name of the organizing staff</label>
                 <input required type="text" class="form-control" Name="organizer_name" value="{{f.organizer_name}}" readonly>
               </div>
 
               <div class="mb-3">
-                <label for="organizer_contact" class="form-label">Contact number of the organizer</label>
-                <input required type="number" class="form-control" Name="organizer_contact" value="{{f.organizer_contact}}" readonly>
+                <label for="organizer_contact" class="form-label">Contact number of the organizing staff</label>
+                <input required type="number" class="form-control" Name="organizer_contact" value="{{f.organizer_contact}}">
               </div>
 
           </div>
@@ -483,30 +511,32 @@
 
                 <div class="mb-3">
                   <label for="guest_house_persons" class="form-label">Number of persons</label>
-                  <input type="text" class="form-control" id="guest_house_persons" name="guest_house_persons" {% if f.guest_house == "Yes" %} value="{{f.guest_house_persons}}" {% endif %}>
+                  <input type="number" class="form-control" id="guest_house_persons" name="guest_house_persons" {% if f.guest_house == "Yes" %} value="{{f.guest_house_persons}}" {% endif %}>
                   <div class="invalid-feedback">Enter the number of persons</div>
                   <div class="valid-feedback">Looks good!</div>
                 </div>
 
                 <div class="form-row">
-                  <div class="form-group col-md-4">
-                    <label for="guest_house_days" class="form-label">Number of days</label>
-                    <input type="number" class="form-control" id="guest_house_days" name="guest_house_days" {% if f.guest_house == "Yes" %} value="{{f.guest_house_days}}" {% endif %}>
-                    <div class="invalid-feedback">Enter number of days</div>
-                    <div class="valid-feedback">Looks good!</div>
-                  </div>
 
                   <div class="form-group col-md-4">
                     <label for="guest_house_from_date" class="form-label">From date</label>
-                    <input type="date" class="form-control" id="guest_house_from_date" name="guest_house_from_date" {% if f.guest_house == "Yes" %} value="{{f.guest_house_from_date}}" {% endif %}>
+                    <input type="date" class="form-control" id="guest_house_from_date" name="guest_house_from_date">
                     <div class="invalid-feedback">Choose date</div>
+                    <div class="feedback"><p id="custom-feedback"></p></div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
 
                   <div class="form-group col-md-4">
                     <label for="guest_house_to_date" class="form-label">To date</label>
-                    <input type="date" class="form-control" id="guest_house_to_date" name="guest_house_to_date" {% if f.guest_house == "Yes" %} value="{{f.guest_house_to_date}}" {% endif %}>
+                    <input type="date" class="form-control" id="guest_house_to_date" name="guest_house_to_date">
                     <div class="invalid-feedback">Choose date</div>
+                    <div class="valid-feedback">Looks good!</div>
+                  </div>
+
+                  <div class="form-group col-md-4">
+                    <label for="guest_house_days" class="form-label">Number of days</label>
+                    <input type="number" class="form-control" id="guest_house_days" name="guest_house_days" readonly>
+                    <div class="invalid-feedback">Enter number of days</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
 
@@ -546,7 +576,7 @@
 
                   <div class="form-group col-md-6">
                     <label for="refreshment_for_guest_number" class="form-label">Number of person</label>
-                    <input type="text" class="form-control" Name="refreshment_for_guest_number" id="r_guest_number" {% if f.refreshment_for_guest == "Yes" %} value={{f.guest_house_persons}} {% endif %} >
+                    <input type="number" class="form-control" Name="refreshment_for_guest_number" id="r_guest_number" {% if f.refreshment_for_guest == "Yes" %} value={{f.guest_house_persons}} {% endif %} >
                     <div class="invalid-feedback">Enter number of persons</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
@@ -562,20 +592,20 @@
                 <div class="form form-row was-validated ">
                   <div class="form-group col-md-4">
                     <label for="refresh_guest_tea">Tea</label>
-                    <input type="text" class="form-control" name="refreshment_guest_tea" id="refreshment_guest_tea" {% if f.refreshment_for_guest == "Yes" %} value={{f.refreshment_guest_tea}} {% endif %}>
+                    <input type="number" class="form-control" name="refreshment_guest_tea" id="refreshment_guest_tea" {% if f.refreshment_for_guest == "Yes" %} value={{f.refreshment_guest_tea}} {% endif %}>
                     <div class="invalid-feedback">Enter number of tea</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
                   <div class="form-group col-md-4">
                     <label for="refresh_guest_coffee">Coffee</label>
-                    <input type="text" class="form-control" name="refreshment_guest_coffee"
+                    <input type="number" class="form-control" name="refreshment_guest_coffee"
                       id="refreshment_guest_coffee" {% if f.refreshment_for_guest == "Yes" %} value={{f.refreshment_guest_coffee}} {% endif %}>
                     <div class="invalid-feedback">Enter number of coffee</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
                   <div class="form-group col-md-4">
                     <label for="refresh_guest_snacks">Snacks</label>
-                    <input type="text" class="form-control" name="refreshment_guest_snacks"
+                    <input type="number" class="form-control" name="refreshment_guest_snacks"
                       id="refreshment_guest_snacks" {% if f.refreshment_for_guest == "Yes" %} value={{f.refreshment_guest_snacks}} {% endif %}>
                     <div class="invalid-feedback">Enter number of snacks</div>
                     <div class="valid-feedback">Looks good!</div>
@@ -605,7 +635,7 @@
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label for="refreshment_for_student_number" class="form-label">Number of persons</label>
-                    <input type="text" class="form-control" Name="refreshment_for_student_number" id="refreshment_for_student_number" {% if f.refreshment_for_student == "Yes" %} value="{{f.refreshment_for_student_number}}" {% endif %} >
+                    <input type="number" class="form-control" Name="refreshment_for_student_number" id="refreshment_for_student_number" {% if f.refreshment_for_student == "Yes" %} value="{{f.refreshment_for_student_number}}" {% endif %} >
                     <div class="invalid-feedback">Enter number of persons</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
@@ -620,19 +650,19 @@
                 <div class="form-row">
                   <div class="form-group col-md-4">
                     <label for="refresh_student_tea">Tea</label>
-                    <input type="text" class="form-control" name="refreshment_student_tea" id="refreshment_student_tea" {% if f.refreshment_for_student == "Yes" %} value="{{f.refreshment_student_tea}}" {% endif %} >
+                    <input type="number" class="form-control" name="refreshment_student_tea" id="refreshment_student_tea" {% if f.refreshment_for_student == "Yes" %} value="{{f.refreshment_student_tea}}" {% endif %} >
                     <div class="invalid-feedback">Enter number of tea</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
                   <div class="form-group col-md-4">
                     <label for="refresh_student_coffee">Coffee</label>
-                    <input type="text" class="form-control" name="refreshment_student_coffee" id="refreshment_student_coffee" {% if f.refreshment_for_student == "Yes" %} value="{{f.refreshment_student_coffee}}" {% endif %} >
+                    <input type="number" class="form-control" name="refreshment_student_coffee" id="refreshment_student_coffee" {% if f.refreshment_for_student == "Yes" %} value="{{f.refreshment_student_coffee}}" {% endif %} >
                     <div class="invalid-feedback">Enter number of coffee</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
                   <div class="form-group col-md-4">
                     <label for="refresh_student_snacks">Snacks</label>
-                    <input type="text" class="form-control" name="refreshment_student_snacks" id="refreshment_student_snacks" {% if f.refreshment_for_student == "Yes" %} value="{{f.refreshment_student_snacks}}" {% endif %}>
+                    <input type="number" class="form-control" name="refreshment_student_snacks" id="refreshment_student_snacks" {% if f.refreshment_for_student == "Yes" %} value="{{f.refreshment_student_snacks}}" {% endif %}>
                     <div class="invalid-feedback">Enter number of snacks</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
@@ -670,14 +700,14 @@
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label for="tiffin" class="form-label">Tiffin</label>
-                    <input type="text" class="form-control" Name="tiffin" id="tiffin" {% if f.lunch_required_time != '00:00' %} value="{{f.tiffin}}" {% endif %}>
+                    <input type="number" class="form-control" Name="tiffin" id="tiffin" {% if f.lunch_required_time != '00:00' %} value="{{f.tiffin}}" {% endif %}>
                     <div class="invalid-feedback">Enter number of tiffin</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
     
                   <div class="form-group col-md-6">
                     <label for="normal_lunch" class="form-label">Normal Lunch</label>
-                    <input type="text" class="form-control" Name="normal_lunch" id="normal_lunch" {% if f.lunch_required_time != '00:00' %} value="{{f.normal_lunch}}" {% endif %}>
+                    <input type="number" class="form-control" Name="normal_lunch" id="normal_lunch" {% if f.lunch_required_time != '00:00' %} value="{{f.normal_lunch}}" {% endif %}>
                     <div class="invalid-feedback">Enter number of normal lunch</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
@@ -687,14 +717,14 @@
     
                   <div class="form-group col-md-6">
                     <label for="spl_lunch_veg" class="form-label">Special Lunch(veg)</label>
-                    <input type="text" class="form-control" Name="spl_lunch_veg" id="spl_lunch_veg" {% if f.lunch_required_time != '00:00' %} value="{{f.spl_lunch_veg}}" {% endif %}>
+                    <input type="number" class="form-control" Name="spl_lunch_veg" id="spl_lunch_veg" {% if f.lunch_required_time != '00:00' %} value="{{f.spl_lunch_veg}}" {% endif %}>
                     <div class="invalid-feedback">Enter number of special lunch(veg)</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
     
                   <div class="form-group col-md-6">
                     <label for="spl_lunch_non_veg" class="form-label">Special Lunch(Non-veg)</label>
-                    <input type="text" class="form-control" Name="spl_lunch_non_veg" id="spl_lunch_non_veg" {% if f.lunch_required_time != '00:00' %} value="{{f.spl_lunch_non_veg}}" {% endif %}>
+                    <input type="number" class="form-control" Name="spl_lunch_non_veg" id="spl_lunch_non_veg" {% if f.lunch_required_time != '00:00' %} value="{{f.spl_lunch_non_veg}}" {% endif %}>
                     <div class="invalid-feedback">Enter the number of special lunch(non-veg)</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
@@ -719,23 +749,144 @@
             <small id="payment_helper" class="form-text text-muted">(Choose "Nill" if no amount is spent on refreshment and lunch)</small>
 
             <div class="form was-validated form-check custom-control custom-radio">
-              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" value="Association Account" {% if f.payment_through == "Association Account" %} checked {% endif %} required>
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" value="Nill" onclick="payment_others(1)" {% if f.payment_through == "Nill" %} checked {% endif %} required>
+              <label class="form-check-label" for="payment_through" >
+                Nill
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" value="Association Account" onclick="payment_others(1)" {% if f.payment_through == "Association Account" %} checked {% endif %} required>
               <label class="form-check-label" for="payment_through">
                 Association account
               </label>
             </div>
             <div class="form was-validated form-check custom-control custom-radio">
-              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" value="Institution Account" {% if f.payment_through == "Institution Account" %} checked {% endif %} required>
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" value="Institution Account" onclick="payment_others(1)" {% if f.payment_through == "Institution Account" %} checked {% endif %} required>
               <label class="form-check-label" for="payment_through">
                 Institution account
               </label>
             </div>
 
             <div class="form was-validated form-check custom-control custom-radio">
-              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" value="Nill" {% if f.payment_through == "Nill" %} checked {% endif %} required>
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)" {% if f.payment_through == "Department" %} checked {% endif %} value="Department" required>
               <label class="form-check-label" for="payment_through" >
-                Nill
+                Department
               </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)" {% if f.payment_through == "R & D" %} checked {% endif %} value="R & D" required>
+              <label class="form-check-label" for="payment_through" >
+                R & D
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)" {% if f.payment_through == "Professional Society/Chapter" %} checked {% endif %}
+                value="Professional Society/Chapter" required>
+              <label class="form-check-label" for="payment_through" >
+                Professional Society/Chapter
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)" {% if f.payment_through == "Value Added Course" %} checked {% endif %}
+                value="Value Added Course" required>
+              <label class="form-check-label" for="payment_through" >
+                Value Added Course
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)" {% if f.payment_through == "Conference/Seminar/Workshop/FDP" %} checked {% endif %}
+                value="Conference/Seminar/Workshop/FDP" required>
+              <label class="form-check-label" for="payment_through" >
+                Conference/Seminar/Workshop/FDP
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)" {% if f.payment_through == "Lab equipments/Software/Consumables" %} checked {% endif %}
+                value="Lab equipments/Software/Consumables" required>
+              <label class="form-check-label" for="payment_through" >
+                Lab equipments/Software/Consumables
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)" {% if f.payment_through == "Maintenance & Spares" %} checked {% endif %}
+                value="Maintenance & Spares" required>
+              <label class="form-check-label" for="payment_through" >
+                Maintenance & Spares
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)" {% if f.payment_through == "Alumni" %} checked {% endif %}
+                value="Alumni" required>
+              <label class="form-check-label" for="payment_through" >
+                Alumni
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)" {% if f.payment_through == "Clubs" %} checked {% endif %}
+                value="Clubs" required>
+              <label class="form-check-label" for="payment_through" >
+                Clubs
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)" {% if f.payment_through == "Sports" %} checked {% endif %}
+                value="Sports" required>
+              <label class="form-check-label" for="payment_through" >
+                Sports
+              </label>
+            </div>
+            
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)" {% if f.payment_through == "Placement" %} checked {% endif %}
+                value="Placement" required>
+              <label class="form-check-label" for="payment_through" >
+                Placement
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)" {% if f.payment_through == "Library" %} checked {% endif %}
+                value="Library" required>
+              <label class="form-check-label" for="payment_through" >
+                Library
+              </label>
+            </div>
+
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" onclick="payment_others(1)" id="payment_through" {% if f.payment_through == "Travel" %} checked {% endif %}
+                value="Travel" required>
+              <label class="form-check-label" for="payment_through" >
+                Travel
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" onclick="payment_others(0)" id="payment_through" {% if f.payment_through == "Others" %} checked {% endif %}
+                value="Others" required>
+              <label class="form-check-label" for="payment_through" >
+                Others
+              </label>
+            </div>
+
+
+            <div class="collapse mb-3" id="pay_others">
+              <div class="well">
+              <label for="payment_through_others" class="form-label">Specify Others</label>
+              <input type="text" class="form-control" Name="payment_through_others" id="payment_through_others" >
+              <div class="invalid-feedback">Specify others</div>
+              <div class="valid-feedback">Looks good!</div>
+            </div>
             </div>
 
           </div>
@@ -762,19 +913,22 @@
                 <div class="form-row">
                   <div class="form-group col-md-4">
                     <label for="transport_req_date" class="form-label">Transport requirement date</label>
-                    <input type="date" class="form-control" Name="transport_req_date" {% if f.transport_req == "Yes" %} value="{{f.transport_req_date}}" {% endif %} >
-                    <div class="valid-feedback">Choose if required</div>
+                    <input type="date" class="form-control" id="id_transport_req_date" Name="transport_req_date" {% if f.transport_req == "Yes" %} value="{{f.transport_req_date}}" {% endif %} >
+                    <div class="invalid-feedback">Choose date</div>
+                    <div class="valid-feedback">Looks good!</div>
                   </div>
                   <div class="form-group col-md-4">
                     <label for="transport_pickup_time" class="form-label">Pick up time at NGPIT</label>
-                    <input type="time" class="form-control" Name="transport_pickup_time" {% if f.transport_req == "Yes" %} value="{{f.transport_pickup_time}}" {% endif %}>
-                    <div class="valid-feedback">Choose if required</div>
+                    <input type="time" class="form-control" id="id_transport_pickup_time" Name="transport_pickup_time" {% if f.transport_req == "Yes" %} value="{{f.transport_pickup_time}}" {% endif %}>
+                    <div class="invalid-feedback">Choose time</div>
+                    <div class="valid-feedback">Looks good!</div>
                   </div>
 
                   <div class="form-group col-md-4">
                     <label for="transport_drop_time" class="form-label">Drop time</label>
-                    <input type="time" class="form-control" Name="transport_drop_time" {% if f.transport_req == "Yes" %} value="{{f.transport_drop_time}}" {% endif %}>
-                    <div class="valid-feedback">Choose if required</div>
+                    <input type="time" class="form-control" id="id_transport_drop_time" Name="transport_drop_time" {% if f.transport_req == "Yes" %} value="{{f.transport_drop_time}}" {% endif %}>
+                    <div class="invalid-feedback">Choose time</div>
+                    <div class="valid-feedback">Looks good!</div>
                   </div>
 
                 </div>
@@ -782,23 +936,28 @@
 
                 <div class="mb-3">
                   <label for="transport_location" class="form-label">Location</label>
-                  <input type="text" class="form-control" Name="transport_location" {% if f.transport_req == "Yes" %} value="{{f.transport_location}}" {% endif %}>
-                  <div class="valid-feedback">Enter if required</div>
+                  <input type="text" class="form-control" id="id_transport_location" Name="transport_location" {% if f.transport_req == "Yes" %} value="{{f.transport_location}}" {% endif %}>
+                  <div class="invalid-feedback">Enter location</div>
+                  <div class="valid-feedback">Looks good!</div>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label for="transport_pickup_person_name" class="form-label">Name of the pick up person</label>
-                    <input type="text" class="form-control" Name="transport_pickup_person_name" {% if f.transport_req == "Yes" %} value="{{f.transport_pickup_person_name}}" {% endif %}>
-                    <div class="valid-feedback">Enter if required</div>
+                    <input type="text" class="form-control" id="id_transport_pickup_person_name" Name="transport_pickup_person_name" {% if f.transport_req == "Yes" %} value="{{f.transport_pickup_person_name}}" {% endif %}>
+                    <div class="invalid-feedback">Enter name of the pickup person</div>
+                    <div class="valid-feedback">Looks good!</div>
                   </div>
                   <div class="form-group col-md-6">
                     <label for="transport_pickup_person_contact" class="form-label">Contact number of the pick up
                       person</label>
-                    <input type="number" class="form-control" Name="transport_pickup_person_contact" {% if f.transport_req == "Yes" %} value="{{f.transport_pickup_person_contact}}" {% endif %}>
-                    <div class="valid-feedback">Enter if required</div>
+                    <input type="number" class="form-control" id="id_transport_pickup_person_contact" Name="transport_pickup_person_contact" {% if f.transport_req == "Yes" %} value="{{f.transport_pickup_person_contact}}" {% endif %}>
+                    <div class="invalid-feedback">Enter contact number of the pickup person</div>
+                    <div class="valid-feedback">Looks good!</div>
                   </div>
                 </div>
+
+
               </div>
             </div>
           </div>
@@ -1201,6 +1360,62 @@
       
     return;
   }
+
+  document.getElementById("guest_house_from_date").addEventListener('input',()=>{
+    const func_end_date = document.getElementById("func_end_date").value;
+    const choosen_date = document.getElementById("guest_house_from_date").value;
+    const to_date = document.getElementById("guest_house_to_date").value;
+    if((choosen_date>func_end_date)){
+      document.getElementById("guest_house_from_date").value='';
+    }
+    else if(document.getElementById("guest_house_to_date").value!=''){
+      if(choosen_date>to_date)
+      document.getElementById("guest_house_to_date").value='';
+      // get the start and end dates from the input fields
+      const startDate = new Date(choosen_date);
+      const endDate = new Date(document.getElementById("guest_house_to_date").value);
+      // calculate the difference in days
+      const differenceInMs = endDate.getTime() - startDate.getTime();
+      const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+  
+      // display the result
+      document.getElementById('guest_house_days').value = differenceInDays+1;
+    }
+});
+
+document.getElementById("guest_house_to_date").addEventListener('input',()=>{
+  const func_end_date = document.getElementById("func_end_date").value;
+  const start_date = document.getElementById("guest_house_from_date").value;
+  const choosen_date = document.getElementById("guest_house_to_date").value;
+  if((choosen_date>func_end_date) | (choosen_date<start_date)){
+    document.getElementById("guest_house_to_date").value='';
+  }
+  else{
+      // get the start and end dates from the input fields
+      const startDate = new Date(start_date);
+      const endDate = new Date(choosen_date);
+  
+      // calculate the difference in days
+      const differenceInMs = endDate.getTime() - startDate.getTime();
+      const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+  
+      // display the result
+      document.getElementById('guest_house_days').value = differenceInDays+1;
+  }
+});
+
+function payment_others(x){
+  if(x==0){
+    document.getElementById("pay_others").style.display='block';
+    document.getElementById("payment_through_others").required = true;
+  }
+  else{
+    document.getElementById("pay_others").style.display='none';
+    document.getElementById("payment_through_others").value = '';
+    document.getElementById("payment_through_others").required = false;
+  }
+  return;
+}
 
   function func_transport(x){
     if(x==0){

@@ -122,15 +122,13 @@
           <h5 class="card-header">General details</h5>
           <div class="card-body">
 
-
-
             <div class="mb-3">
               <label for="func_date" class="for">Starting Date</label>
               <input disabled type="date" class="form-control mb-3" Name="func_date" value={{start_date}}>
             </div>
             <div class="mb-3">
               <label for="func_end_date" class="for">Ending Date</label>
-              <input disabled type="date" class="form-control mb-3" Name="func_end_date" value={{end_date}}>
+              <input disabled type="date" class="form-control mb-3" id="func_end_date" Name="func_end_date" value={{end_date}}>
             </div>
             <div class="mb-3">
               <label for="func_month" class="for">Function Month</label>
@@ -159,12 +157,14 @@
                         <label for="func_date" class="for">Function start date</label>
                         <input type="date" class="form-control mb-3" id="check_date" Name="func_start_date_check" required>
                         <div class="valid-feedback">Looks good!</div>
+                        <small id="start-date-feedback"></small>
                         <div class="invalid-feedback">Choose starting date</div>
                       </div>
                       <div class="mb-3">
                         <label for="func_date" class="for">Function end date</label>
-                        <input type="date" class="form-control mb-3" Name="func_end_date_check" required>
+                        <input type="date" class="form-control mb-3" id="func_end_date_check" Name="func_end_date_check" required>
                         <div class="valid-feedback">Looks good!</div>
+                        <small id="end-date-feedback"></small>
                         <div class="invalid-feedback">Choose ending date</div>
                       </div>
                       
@@ -192,45 +192,37 @@
 
                       <div class="mb-3">
                         <label for="time_duration_start_check" class="form-label">Starting time</label>
-                        <input type="time" class="form-control" Name="time_duration_start_check" required>
+                        <input type="time" class="form-control" id="time_duration_start_check" Name="time_duration_start_check" required>
                         <div class="valid-feedback">Good time!</div>
                         <div class="invalid-feedback">Choose time in 24-hours format</div>
                       </div>
                       <div class="mb-3">
                         <label for="time_duration_end_check" class="form-label">Ending time</label>
-                        <input type="time" class="form-control" Name="time_duration_end_check" required>
+                        <input type="time" class="form-control" id="time_duration_end_check" Name="time_duration_end_check" required>
                         <div class="valid-feedback">Good time!</div>
                         <div class="invalid-feedback">Choose time in 24-hours format</div>
                       </div>
-                      
-                      <div>
-                        <label class="form-label">Session</label>
-                        <div class="row">
-                          <div class="col md-4">
-                          <div class="custom-control custom-radio">
-                            <input class="form-check-input" type="radio" name="session" id="session" value="Forenoon" required>
-                            <label class="form-check-label" for="session">Forenoon</label>
-                          </div>
+
+                      <div class="form-row mb-3">
+
+                        <div class="form-group col-md-6">
+                          <label for="internal_stud_capacity" class="form-label">Internal Students</label>
+                          <input required type="number" class="form-control" Name="internal_stud_capacity">
+                          <div class="valid-feedback">Looks good!</div>
+                          <div class="invalid-feedback">Enter number of internal students</div>
+                        </div>
+  
+                        <div class="form-group col-md-6">
+                          <label for="external_stud_capacity" class="form-label">External Students</label>
+                          <input required type="number" class="form-control" Name="external_stud_capacity"  >
+                          <small id="func_years_help" class="form-text text-muted">Enter '0' if no external students</small>
+                          <div class="valid-feedback">Looks good!</div>
+                          <div class="invalid-feedback">Enter number of external students</div>
                         </div>
 
-                        <div class="col md-4">
-                          <div class="custom-control custom-radio">
-                            <input class="form-check-input" type="radio" name="session" id="session" value="Afternoon" required>
-                            <label class="form-check-label" for="session">Afternoon</label>
-                          </div>
-                        </div>
-
-                        <div class="col md-4">
-                          <div class="custom-control custom-radio">
-                            <input class="form-check-input" type="radio" name="session" id="session" value="Fullday" required>
-                            <label class="form-check-label" for="session">Fullday</label>
-                          </div>
-                        </div>
-
-
-                        </div>
                       </div>
-
+                      
+                      
                   </div>
                   <div class="modal-footer">
                     <input type="hidden" id="mail_id" name="mail_id" value={{mailid}}>
@@ -318,26 +310,55 @@
 
 
 
-              <div class="mb-3">
+              <!-- <div class="mb-3">
                 <label for="training_type" class="form-label">Type of training</label>
                 <input required type="text" class="form-control" Name="train_type">
                 <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback">Enter type of training</div>
+              </div> -->
+
+
+              <div class="mb-3">
+                <label for="training_type" class="form-label">Select training type</label>
+                <select class="shadow form-select custom-select rounded" name="train_type" id="train_type" required>
+                  <option value="">- - - - - - -</option>
+                  <option value="Alumini Lecture Series">Alumini Lecture Series</option>
+                  <option value="Academic Expert Lecture">Academic Expert Lecture</option>
+                  <option value="Awareness program">Awareness program</option>
+                  <option value="Boot Camp">Boot Camp</option>
+                  <option value="Conference">Conference</option>
+                  <option value="FDP">FDP</option>
+                  <option value="FDTP">FDTP</option>
+                  <option value="Guest Lecture">Guest Lecture</option>
+                  <option value="Hand-on-training">Hand-on-training</option>
+                  <option value="Hackathon">Hackathon</option>
+                  <option value="Ideathon">Ideathon</option>
+                  <option value="Industry Lecture Series">Industry Lecture Series</option>
+                  <option value="One credit course">One credit course</option>
+                  <option value="Seminar">Seminar</option>
+                  <option value="STTP">STTP</option>
+                  <option value="Value Added Course">Value Added Course</option>
+                  <option value="Workshop">Workshop</option>
+                </select>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Choose Type of training</div>
               </div>
+
+
 
               <div class="form-row mb-3 ">
 
                 <div class="form-group col-md-4">
                   <label for="func_students" class="form-label">Number of students - Internal</label>
-                  <input required type="number" class="form-control" Name="func_students">
+                  <input required type="number" class="form-control" Name="func_students" value="{{internal_stud}}" readonly>
                   <div class="valid-feedback">Looks good!</div>
                   <div class="invalid-feedback">Enter number of internal students</div>
                 </div>
   
                 <div class="form-group col-md-4">
                   <label for="func_students_external" class="form-label">Number of students - External</label>
-                  <input required type="number" class="form-control" Name="func_students_external" aria-describedby="external_stud_helper">
-                  <small id="external_stud_helper" class="form-text text-muted">Mention "0" if no external students</small>
+                  <input required type="number" class="form-control" Name="func_students_external" value="{{external_stud}}" readonly aria-describedby="external_stud_helper">
+                  <!-- <small id="external_stud_helper" class="form-text text-muted">Mention "0" if no external students</small> -->
                   <div class="valid-feedback">Looks good!</div>
                   <div class="invalid-feedback">Enter number of external students</div>
                 </div>
@@ -359,7 +380,7 @@
                 <div class="form-group col-md-4">
                   <label for="func_students_year" class="form-label">Year of Students</label>
                   <input type="text" style="text-transform:uppercase;" class="form-control" Name="func_students_year" id="func_students_year" required aria-describedby="func_years_help">
-                  <small id="func_years_help" class="form-text text-muted">Use 'I' to denote year and '&' to seperate.(Other special characters will not be allowed)</small>
+                  <small id="func_years_help" class="form-text text-muted">Use 'I', 'II', 'III' and 'IV' to denote year and '&' to combine.(Other special characters will not be allowed)</small>
                   <div class="invalid-feedback">Enter the year of students</div>
                   <div class="valid-feedback">Looks good!</div>
                 </div>
@@ -469,7 +490,7 @@
               <div class="form-group">
                 <label for="field">Select field</label>
                 <select class="form-select custom-select rounded" id="field_type" name="field_type" required>
-                  <option value="">Choose...</option>
+                  <option value="">Choose field...</option>
                   <option value="College">College</option>
                   <option value="Industry">Industry</option>
                 </select>
@@ -479,7 +500,7 @@
 
 
               <div class="mb-3">
-                <label for="organizer_name" class="form-label">Name of the staff</label>
+                <label for="organizer_name" class="form-label">Name of the organanising staff</label>
                 <input required type="text" class="form-control" Name="organizer_name">
                 <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback">Enter name of the staff</div>
@@ -487,7 +508,7 @@
 
 
               <div class="mb-3">
-                <label for="organizer_contact" class="form-label">Contact number of the staff</label>
+                <label for="organizer_contact" class="form-label">Contact number of the organanising staff</label>
                 <input required type="number" class="form-control" Name="organizer_contact">
                 <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback">Enter contact number of the staff</div>
@@ -531,17 +552,12 @@
                 </div>
 
                 <div class="form-row">
-                  <div class="form-group col-md-4">
-                    <label for="guest_house_days" class="form-label">Number of days</label>
-                    <input type="number" class="form-control" id="guest_house_days" name="guest_house_days">
-                    <div class="invalid-feedback">Enter number of days</div>
-                    <div class="valid-feedback">Looks good!</div>
-                  </div>
 
                   <div class="form-group col-md-4">
                     <label for="guest_house_from_date" class="form-label">From date</label>
                     <input type="date" class="form-control" id="guest_house_from_date" name="guest_house_from_date">
                     <div class="invalid-feedback">Choose date</div>
+                    <div class="feedback"><p id="custom-feedback"></p></div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
 
@@ -552,6 +568,12 @@
                     <div class="valid-feedback">Looks good!</div>
                   </div>
 
+                  <div class="form-group col-md-4">
+                    <label for="guest_house_days" class="form-label">Number of days</label>
+                    <input type="number" class="form-control" id="guest_house_days" name="guest_house_days" readonly>
+                    <div class="invalid-feedback">Enter number of days</div>
+                    <div class="valid-feedback">Looks good!</div>
+                  </div>
 
                 </div>
                 
@@ -586,7 +608,7 @@
                 <div class="form form-row was-validated ">
                   <div class="form-group col-md-6">
                     <label for="refreshment_for_guest_number" class="form-label">Number of person</label>
-                    <input type="text" class="form-control" Name="refreshment_for_guest_number" id="r_guest_number">
+                    <input type="number" class="form-control" Name="refreshment_for_guest_number" id="r_guest_number">
                     <div class="invalid-feedback">Enter number of persons</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
@@ -602,20 +624,20 @@
                 <div class="form form-row was-validated ">
                   <div class="form-group col-md-4">
                     <label for="refresh_guest_tea">Tea</label>
-                    <input type="text" class="form-control" name="refreshment_guest_tea" id="refreshment_guest_tea">
+                    <input type="number" class="form-control" name="refreshment_guest_tea" id="refreshment_guest_tea">
                     <div class="invalid-feedback">Enter number of tea</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
                   <div class="form-group col-md-4">
                     <label for="refresh_guest_coffee">Coffee</label>
-                    <input type="text" class="form-control" name="refreshment_guest_coffee"
+                    <input type="number" class="form-control" name="refreshment_guest_coffee"
                       id="refreshment_guest_coffee">
                     <div class="invalid-feedback">Enter number of coffee</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
                   <div class="form-group col-md-4">
                     <label for="refresh_guest_snacks">Snacks</label>
-                    <input type="text" class="form-control" name="refreshment_guest_snacks"
+                    <input type="number" class="form-control" name="refreshment_guest_snacks"
                       id="refreshment_guest_snacks">
                     <div class="invalid-feedback">Enter number of snacks</div>
                     <div class="valid-feedback">Looks good!</div>
@@ -644,7 +666,7 @@
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label for="refreshment_for_student_number" class="form-label">Number of persons</label>
-                    <input type="text" class="form-control" Name="refreshment_for_student_number" id="refreshment_for_student_number">
+                    <input type="number" class="form-control" Name="refreshment_for_student_number" id="refreshment_for_student_number">
                     <div class="invalid-feedback">Enter number of persons</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
@@ -659,19 +681,19 @@
                 <div class="form-row">
                   <div class="form-group col-md-4">
                     <label for="refresh_student_tea">Tea</label>
-                    <input type="text" class="form-control" name="refreshment_student_tea" id="refreshment_student_tea">
+                    <input type="number" class="form-control" name="refreshment_student_tea" id="refreshment_student_tea">
                     <div class="invalid-feedback">Enter number of tea</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
                   <div class="form-group col-md-4">
                     <label for="refresh_student_coffee">Coffee</label>
-                    <input type="text" class="form-control" name="refreshment_student_coffee" id="refreshment_student_coffee">
+                    <input type="number" class="form-control" name="refreshment_student_coffee" id="refreshment_student_coffee">
                     <div class="invalid-feedback">Enter number of coffee</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
                   <div class="form-group col-md-4">
                     <label for="refresh_student_snacks">Snacks</label>
-                    <input type="text" class="form-control" name="refreshment_student_snacks" id="refreshment_student_snacks">
+                    <input type="number" class="form-control" name="refreshment_student_snacks" id="refreshment_student_snacks">
                     <div class="invalid-feedback">Enter number of snacks</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
@@ -696,10 +718,6 @@
               </div>
               </div>
 
-            <!-- <a class="btn btn-primary mb-3" role="button" data-toggle="collapse" href="#lunch_req"
-              aria-expanded="false" aria-controls="collapseExample">
-              Required
-            </a> -->
 
             <div class="collapse ma-3" id="lunch_req">
               <div class="form was-validated well">
@@ -715,14 +733,14 @@
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label for="tiffin" class="form-label">Tiffin</label>
-                    <input type="text" class="form-control" Name="tiffin" id="tiffin">
+                    <input type="number" class="form-control" Name="tiffin" id="tiffin">
                     <div class="invalid-feedback">Enter number of tiffin</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
     
                   <div class="form-group col-md-6">
                     <label for="normal_lunch" class="form-label">Normal Lunch</label>
-                    <input type="text" class="form-control" Name="normal_lunch" id="normal_lunch">
+                    <input type="number" class="form-control" Name="normal_lunch" id="normal_lunch">
                     <div class="invalid-feedback">Enter number of normal lunch</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
@@ -732,14 +750,14 @@
     
                   <div class="form-group col-md-6">
                     <label for="spl_lunch_veg" class="form-label">Special Lunch(veg)</label>
-                    <input type="text" class="form-control" Name="spl_lunch_veg" id="spl_lunch_veg">
+                    <input type="number" class="form-control" Name="spl_lunch_veg" id="spl_lunch_veg">
                     <div class="invalid-feedback">Enter number of special lunch(veg)</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
     
                   <div class="form-group col-md-6">
                     <label for="spl_lunch_non_veg" class="form-label">Special Lunch(Non-veg)</label>
-                    <input type="text" class="form-control" Name="spl_lunch_non_veg" id="spl_lunch_non_veg">
+                    <input type="number" class="form-control" Name="spl_lunch_non_veg" id="spl_lunch_non_veg">
                     <div class="invalid-feedback">Enter the number of special lunch(non-veg)</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
@@ -762,15 +780,25 @@
 
             <h5 aria-describedby="payment_helper">Payment through</h5>
             <small id="payment_helper" class="form-text text-muted">(Choose "Nill" if no amount is spent on refreshment and lunch)</small>
+
             <div class="form was-validated form-check custom-control custom-radio">
-              <input class="form-check-input" type="radio" name="payment_through" id="payment_through"
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
+                value="Nill" required>
+              <label class="form-check-label" for="payment_through" >
+                Nill
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
                 value="Association Account" required>
               <label class="form-check-label" for="payment_through">
                 Association account
               </label>
             </div>
+
             <div class="form was-validated form-check custom-control custom-radio">
-              <input class="form-check-input" type="radio" name="payment_through" id="payment_through"
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
                 value="Institution Account" required>
               <label class="form-check-label" for="payment_through">
                 Institution account
@@ -778,13 +806,129 @@
             </div>
 
             <div class="form was-validated form-check custom-control custom-radio">
-              <input class="form-check-input" type="radio" name="payment_through" id="payment_through"
-                value="Nill" required>
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
+                value="Department" required>
               <label class="form-check-label" for="payment_through" >
-                Nill
+                Department
               </label>
             </div>
-    
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
+                value="R & D" required>
+              <label class="form-check-label" for="payment_through" >
+                R & D
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
+                value="Professional Society/Chapter" required>
+              <label class="form-check-label" for="payment_through" >
+                Professional Society/Chapter
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
+                value="Value Added Course" required>
+              <label class="form-check-label" for="payment_through" >
+                Value Added Course
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
+                value="Conference/Seminar/Workshop/FDP" required>
+              <label class="form-check-label" for="payment_through" >
+                Conference/Seminar/Workshop/FDP
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
+                value="Lab equipments/Software/Consumables" required>
+              <label class="form-check-label" for="payment_through" >
+                Lab equipments/Software/Consumables
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
+                value="Maintenance & Spares" required>
+              <label class="form-check-label" for="payment_through" >
+                Maintenance & Spares
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
+                value="Alumni" required>
+              <label class="form-check-label" for="payment_through" >
+                Alumni
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
+                value="Clubs" required>
+              <label class="form-check-label" for="payment_through" >
+                Clubs
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
+                value="Sports" required>
+              <label class="form-check-label" for="payment_through" >
+                Sports
+              </label>
+            </div>
+            
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
+                value="Placement" required>
+              <label class="form-check-label" for="payment_through" >
+                Placement
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" id="payment_through" onclick="payment_others(1)"
+                value="Library" required>
+              <label class="form-check-label" for="payment_through" >
+                Library
+              </label>
+            </div>
+
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" onclick="payment_others(1)" id="payment_through"
+                value="Travel" required>
+              <label class="form-check-label" for="payment_through" >
+                Travel
+              </label>
+            </div>
+
+            <div class="form was-validated form-check custom-control custom-radio">
+              <input class="form-check-input" type="radio" name="payment_through" onclick="payment_others(0)" id="payment_through"
+                value="Others" required>
+              <label class="form-check-label" for="payment_through" >
+                Others
+              </label>
+            </div>
+
+
+            <div class="collapse mb-3" id="pay_others">
+              <div class="well">
+              <label for="payment_through_others" class="form-label">Specify Others</label>
+              <input type="text" class="form-control" Name="payment_through_others" id="payment_through_others" >
+              <div class="invalid-feedback">Specify others</div>
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+            </div>
+
+
 
           </div>
         </div>
@@ -862,6 +1006,8 @@
                     <div class="valid-feedback">Looks good!</div>
                   </div>
                 </div>
+
+                
               </div>
             </div>
           </div>
@@ -1040,14 +1186,14 @@
 
               <div class="form-group col-md-4">
                 <label for="dias" class="form-label">Dias</label>
-                <input required type="text" class="form-control" Name="dias">
+                <input required type="number" class="form-control" Name="dias">
                 <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback">Enter number of person in dias</div>
               </div>
 
               <div class="form-group col-md-4">
                 <label for="audience" class="form-label">Audience</label>
-                <input required type="text" class="form-control" Name="audience">
+                <input required type="number" class="form-control" Name="audience">
                 <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback">Enter number of audiende</div>
               </div>
@@ -1055,7 +1201,7 @@
 
             <div class="mb-3">
               <label for="table_cloth_number" class="form-label">Number of table cloth</label>
-              <input required type="text" class="form-control" Name="table_cloth_number">
+              <input required type="number" class="form-control" Name="table_cloth_number">
               <div class="valid-feedback">Looks good!</div>
                 <div class="invalid-feedback">Enter number of table cloth</div>
             </div>
@@ -1167,6 +1313,7 @@
                   {% csrf_token %}
                   <input type="hidden" id="organizer_mail_id" name="organizer_mail_id" value={{mailid}}>
                   <input type="hidden" id="func_name" name="func_name" value="{{f.func_name}}">
+                  <input type="hidden" id="func_date" name="func_date" value="{{f.func_date}}">
                   <button type="submit" class="btn btn-primary" id="download_func"
                     name="download_func">Download</button>
                 </form>
@@ -1251,17 +1398,154 @@
 
       <script type="text/javascript">
 
-        document.getElementById("function_name").onkeypress = function(e) {
-          var chr = String.fromCharCode(e.which);
-          if ("></\\:;!@#$%^&*()".indexOf(chr) >= 0)
-              return false;
-        };
+        document.getElementById("check_date").oninput= function(e){
+          const today = new Date();
+          const isoDate = today.toISOString().split('T')[0];
+          if(document.getElementById("check_date").value<isoDate){
+            document.getElementById("check_date").value='';
+            document.getElementById("start-date-feedback").style.display='block';
+            document.getElementById("start-date-feedback").style.color='red';
+            document.getElementById("start-date-feedback").innerHTML="The date should not be older !!!";
+          }
+          else{
+            document.getElementById("start-date-feedback").style.display='none';
+          }
+        }
 
-        document.getElementById("func_students_year").onkeypress = function(e) {
+        document.getElementById("func_end_date_check").oninput= function(e){
+          const start_date = document.getElementById("check_date").value;
+          if(start_date>document.getElementById("func_end_date_check").value){
+            document.getElementById("func_end_date_check").value='';
+            document.getElementById("end-date-feedback").style.display='block';
+            document.getElementById("end-date-feedback").style.color='red';
+            document.getElementById("end-date-feedback").innerHTML="The date should be greater than or equal to today !!!";
+          }
+          else{
+            document.getElementById("end-date-feedback").style.display='none';
+          }
+        }
+
+
+        document.getElementById("function_name").addEventListener("input", () => {
+          const inputValue = document.getElementById("function_name").value;
+          const pattern = /^[a-zA-Z0-9\s]*$/; // /[^a-zA-Z0-9\s]/g
+        
+          if (!pattern.test(inputValue)) {
+            document.getElementById("function_name").value = inputValue.replace(/[^a-zA-Z0-9]/g, '');
+          }
+        });
+
+
+        document.getElementById("func_students_year").addEventListener("input",() => {
+          const inputValue = document.getElementById("func_students_year").value.toUpperCase();
+          const pattern = /^[&IV]*$/;
+
+          const sanitizedValue = inputValue.replace(/[^&IV]/g, "");
+
+          if (!pattern.test(sanitizedValue)) {
+          } else {
+            document.getElementById("func_students_year").value = sanitizedValue;
+            if (inputValue.slice(-1) === "&") {
+              cls = document.getElementById("func_students_year").value;
+                cls_ar = cls.split("&");
+                for(let i=0;i<cls_ar.length-1;i++){
+                  if((cls_ar[i].toUpperCase()=="I")|(cls_ar[i].toUpperCase()=="II")|(cls_ar[i].toUpperCase()=="III")|(cls_ar[i].toUpperCase()=="IV")){
+                  }
+                  else{
+                    document.getElementById("func_students_year").value = '';
+                    return false;
+                  }
+                }
+            }
+          }
+
+
+        });
+
+        /*document.getElementById("func_students_year").onkeypress = function(e) {
           var chr = String.fromCharCode(e.which);
           if ("></\\:;!@#$%^-_+=[]{}|*()".indexOf(chr) >= 0)
               return false;
-        };
+          if(("i".indexOf(chr)>=0 )|("v".indexOf(chr)>=0)|("V".indexOf(chr)>=0)|("I".indexOf(chr)>=0)|("&".indexOf(chr)>=0)){
+              if("&".indexOf(chr)>=0){
+                cls = document.getElementById("func_students_year").value;
+                cls_ar = cls.split("&");
+                for(let i=0;i<cls_ar.length;i++){
+                  console.log(cls_ar[i].toUpperCase());
+                  if((cls_ar[i].toUpperCase()=="I")|(cls_ar[i].toUpperCase()=="II")|(cls_ar[i].toUpperCase()=="III")|(cls_ar[i].toUpperCase()=="IV")){
+                    
+                  }
+                  else{
+                    document.getElementById("func_students_year").value = '';
+                    return false;
+                  }
+                }
+              }
+            return true;
+          }          
+          else
+              return false;
+        };*/
+
+        document.getElementById("func_students_year").addEventListener('blur',()=>{
+                cls = document.getElementById("func_students_year").value;
+                cls_ar = cls.split("&");
+                for(let i=0;i<cls_ar.length;i++){
+                  console.log(cls_ar[i]);
+                  if((cls_ar[i].toUpperCase()=="I")|(cls_ar[i].toUpperCase()=="II")|(cls_ar[i].toUpperCase()=="III")|(cls_ar[i].toUpperCase()=="IV")){
+                    
+                  }
+                  else{
+                    document.getElementById("func_students_year").value = '';
+                    return false;
+                  }
+                }
+        });
+
+
+        document.getElementById("guest_house_from_date").addEventListener('input',()=>{
+            const func_end_date = document.getElementById("func_end_date").value;
+            const choosen_date = document.getElementById("guest_house_from_date").value;
+            const to_date = document.getElementById("guest_house_to_date").value;
+            if((choosen_date>func_end_date)){
+              document.getElementById("guest_house_from_date").value='';
+            }
+            else if(document.getElementById("guest_house_to_date").value!=''){
+              if(choosen_date>to_date)
+              document.getElementById("guest_house_to_date").value='';
+              // get the start and end dates from the input fields
+              const startDate = new Date(choosen_date);
+              const endDate = new Date(document.getElementById("guest_house_to_date").value);
+              // calculate the difference in days
+              const differenceInMs = endDate.getTime() - startDate.getTime();
+              const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+          
+              // display the result
+              document.getElementById('guest_house_days').value = differenceInDays+1;
+            }
+        });
+
+        document.getElementById("guest_house_to_date").addEventListener('input',()=>{
+          const func_end_date = document.getElementById("func_end_date").value;
+          const start_date = document.getElementById("guest_house_from_date").value;
+          const choosen_date = document.getElementById("guest_house_to_date").value;
+          if((choosen_date>func_end_date) | (choosen_date<start_date)){
+            document.getElementById("guest_house_to_date").value='';
+          }
+          else{
+              // get the start and end dates from the input fields
+              const startDate = new Date(start_date);
+              const endDate = new Date(choosen_date);
+          
+              // calculate the difference in days
+              const differenceInMs = endDate.getTime() - startDate.getTime();
+              const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+          
+              // display the result
+              document.getElementById('guest_house_days').value = differenceInDays+1;
+          }
+        });
+
       
         function function_home(){
           document.getElementById("home_func").submit();
@@ -1283,6 +1567,19 @@
           document.getElementById()
         }
 
+        function payment_others(x){
+          if(x==0){
+            document.getElementById("pay_others").style.display='block';
+            document.getElementById("payment_through_others").required = true;
+          }
+          else{
+            document.getElementById("pay_others").style.display='none';
+            document.getElementById("payment_through_others").value = '';
+            document.getElementById("payment_through_others").required = false;
+          }
+          return;
+        }
+
         function transport_student(x){
           if (x==0){
             document.getElementById("transport_students_radio").style.display='block';
@@ -1291,6 +1588,8 @@
           }
           else{
             document.getElementById("transport_students_radio").style.display='none';
+            document.getElementById("transport_students_stage").value='';
+            document.getElementById("transport_students_number").value='';
             document.getElementById("transport_students_stage").required=false;
             document.getElementById("transport_students_number").required=false;
           }
@@ -1307,6 +1606,10 @@
           }
           else{
             document.getElementById("guest_House").style.display='none';
+            document.getElementById("guest_house_persons").value='';
+            document.getElementById("guest_house_days").value='';
+            document.getElementById("guest_house_from_date").value='';
+            document.getElementById("guest_house_to_date").value='';
             document.getElementById("guest_house_persons").required=false;
             document.getElementById("guest_house_days").required=false;
             document.getElementById("guest_house_from_date").required=false;
@@ -1327,6 +1630,11 @@
           else
           {
             document.getElementById("refreshment_guest_radio").style.display='none';
+            document.getElementById("r_guest_number").value='';
+            document.getElementById("r_guest_time").value='';
+            document.getElementById("refreshment_guest_tea").value='';
+            document.getElementById("refreshment_guest_coffee").value='';
+            document.getElementById("refreshment_guest_snacks").value='';
             document.getElementById("r_guest_number").required=false;
             document.getElementById("r_guest_time").required=false;
             document.getElementById("refreshment_guest_tea").required=false;
@@ -1348,6 +1656,11 @@
           else
           {
             document.getElementById("refreshment_students").style.display='none';
+            document.getElementById("refreshment_for_student_number").value='';
+            document.getElementById("refreshment_for_student_time").value='';
+            document.getElementById("refreshment_student_tea").value='';
+            document.getElementById("refreshment_student_coffee").value='';
+            document.getElementById("refreshment_student_snacks").value='';
             document.getElementById("refreshment_for_student_number").required=false;
             document.getElementById("refreshment_for_student_time").required=false;
             document.getElementById("refreshment_student_tea").required=false;
@@ -1369,6 +1682,12 @@
           }
           else{
             document.getElementById("lunch_req").style.display='none';
+            document.getElementById("lunch_exact_numbers").value='';
+            document.getElementById("tiffin").value='';
+            document.getElementById("normal_lunch").value='';
+            document.getElementById("spl_lunch_veg").value='';
+            document.getElementById("spl_lunch_non_veg").value='';
+            document.getElementById("lunch_required_time").value='';
             document.getElementById("lunch_exact_numbers").required=false;
             document.getElementById("tiffin").required=false;
             document.getElementById("normal_lunch").required=false;
@@ -1392,6 +1711,12 @@
           }  
           else{
             document.getElementById("transport").style.display='none';
+            document.getElementById("id_transport_req_date").value='';
+            document.getElementById("id_transport_pickup_time").value='';
+            document.getElementById("id_transport_drop_time").value='';
+            document.getElementById("id_transport_location").value='';
+            document.getElementById("id_transport_pickup_person_name").value='';
+            document.getElementById("id_transport_pickup_person_contact").value='';
             document.getElementById("id_transport_req_date").required=false;
             document.getElementById("id_transport_pickup_time").required=false;
             document.getElementById("id_transport_drop_time").required=false;
@@ -1409,6 +1734,7 @@
           }
           else{
             document.getElementById("photography_choice").style.display='none';
+            document.getElementById("photographer").value='';
             document.getElementById("photographer").required=false;
           }
           return;

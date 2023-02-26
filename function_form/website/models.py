@@ -1,8 +1,6 @@
 from django.db import models
 
 
-# Create your models here.
-
 class admin_model(models.Model):
     email = models.EmailField(max_length=50,primary_key=True)
     admin_id = models.CharField(max_length=25)
@@ -18,27 +16,28 @@ class staff_model(models.Model):
         return self.email+ "    --  " + str(self.staff_id)
 
 class venue_model(models.Model):
+    class Meta:
+        unique_together = (('venue','capacity'))
     venue = models.CharField(max_length=60,primary_key=True)
+    capacity = models.IntegerField(null=True)
 
     def __self__(self):
         return self.venue
 
 class booking_model(models.Model):
     class Meta:
-        unique_together = (('venue','booking_date','booking_end_date','session','month'),)
+        unique_together = (('venue','booking_date','booking_end_date','month'),)
     venue = models.CharField(max_length=60)
     booking_date = models.DateField()
     booking_end_date = models.DateField(null=True)
     starting_time = models.TimeField()
     ending_time = models.TimeField()
-    session = models.CharField(max_length=25,null=True)
     month = models.CharField(max_length=25,null=True)
     func_days = models.IntegerField(null=True)
     status = models.CharField(max_length=25,null=True)
     
-
     def __str__(self):
-        return self.venue + "   --  " + str(self.booking_date) + "  --  " + str(self.booking_end_date) + " -- " + self.session
+        return self.venue + "   --  " + str(self.booking_date) + "  --  " + str(self.booking_end_date) + " -- " + self.month
 
 class function_model(models.Model):
     ac_arrangement = models.CharField(max_length=5)
@@ -49,6 +48,7 @@ class function_model(models.Model):
     dias = models.IntegerField()
     field_type = models.CharField(max_length=10)
     func_date = models.DateField()
+    func_end_date = models.DateField(null=True)
     func_days = models.IntegerField()
     func_name = models.CharField(max_length=30,primary_key=True)
     func_students = models.IntegerField()
@@ -109,7 +109,9 @@ class function_model(models.Model):
     transport_students_stage = models.CharField(max_length=50)
     type_of_mic = models.CharField(max_length=20)
     venue = models.CharField(max_length=50)
+    hod_status = models.CharField(max_length=25,null=True)
     status = models.CharField(max_length=25,null=True)
+    principal_status = models.CharField(max_length=25,null=True)
     time_stamp = models.CharField(max_length=50,null=True)
     remarks = models.CharField(max_length=250,null=True)
     document_pdf = models.FileField(upload_to='media',null=True)

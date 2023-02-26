@@ -10,13 +10,12 @@ from django.http import HttpResponse, Http404
 from .models import admin_model,staff_model,function_model,venue_model,booking_model
 from .serializers import admin_serializer,staff_serializer,function_serializer,venue_serializer,booking_serializer
 
+# for mail connections
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
-
-# Create your views here.
 
 
 def login(request):
@@ -68,12 +67,12 @@ def login(request):
     else:
         return render(request,'login_form.html',{})
 
-def update_function(request):
-        if request.method=="POST":
-                mailid = request.POST.get('mailid')
-                return render(request,'admin.html',{
-                        'mailid':mailid,
-                })
+# def update_function(request):
+#         if request.method=="POST":
+#                 mailid = request.POST.get('mailid')
+#                 return render(request,'admin.html',{
+#                         'mailid':mailid,
+#                 })
 
 
 def edit_form_test(request):
@@ -125,13 +124,13 @@ def admin(request):
                         booking_model.objects.filter(booking_date = func_date,starting_time = start_time,ending_time = end_time).update(status = "approved")
                         function_model.objects.filter(func_name = func_name,func_date = func_date,time_duration_start = start_time,time_duration_end = end_time).update(status = "approved")
                         body = "The function form for the booking of "+venue+" on "+func_date+" were successfully approved by admin."
-                        send_mail(sender=org_mail,func_name="Nil",msg_subject="Function form - "+func_name+" - Approved",msg_body=body,msg_attachment="No")
+                        send_mail(sender=org_mail,func_name="Nil",msg_subject="Function form - "+func_name+" - Approved",msg_body=body,msg_attachment="No",func_date=func_date)
                         print("Status approved")
                 elif request.POST.get('admin_action')=="cancel":
                         booking_model.objects.filter(booking_date = func_date,starting_time = start_time,ending_time = end_time).update(status = "cancelled")
                         function_model.objects.filter(func_name = func_name,func_date = func_date,time_duration_start = start_time,time_duration_end = end_time).update(status = "cancelled")
                         body = "The function form for the booking of "+venue+" on "+func_date+" were cancelled by admin."
-                        send_mail(sender=org_mail,func_name="Nil",msg_subject="Function form - "+func_name+" - Approved",msg_body=body,msg_attachment="No")
+                        send_mail(sender=org_mail,func_name="Nil",msg_subject="Function form - "+func_name+" - Approved",msg_body=body,msg_attachment="No",func_date=func_date)
                         print("Status cancelled")
 
                 func_list = function_list()
@@ -140,7 +139,7 @@ def admin(request):
                         'function':func_list,
                 })
 
-def send_mail(sender,func_name,msg_subject,msg_body,msg_attachment):
+def send_mail(sender,func_name,msg_subject,msg_body,msg_attachment,func_date):
 
         fromaddr = "hariharanp20ug0520@drngpit.ac.in"
         toaddr = sender
@@ -165,7 +164,7 @@ def send_mail(sender,func_name,msg_subject,msg_body,msg_attachment):
 
         if(msg_attachment!="No"):
                 # open the file to be sent
-                filename = func_name + ".pdf"
+                filename = func_name + "_" + func_date + ".pdf"
                 msg_attachment.replace("\\\\","//")
                 attachment = open(msg_attachment, "rb")
 
@@ -346,13 +345,14 @@ def check_availability(request):
     func_end_date = request.POST.get('func_end_date_check')
     start_time = request.POST.get('time_duration_start_check')
     end_time = request.POST.get('time_duration_end_check')
-    session = request.POST.get('session')
     mail_id = request.POST.get('mail_id')
+    internal_stud = int(request.POST.get('internal_stud_capacity'))
+    external_stud = int(request.POST.get('external_stud_capacity'))
+    capacity = internal_stud + external_stud
     func_days = 0
 
     print("Function start date ==>",func_start_date)
     print("Function end date ==>",func_end_date)
-    print(session)
 
     func_st = str(func_start_date).split('-')
     func_end = str(func_end_date).split('-')
@@ -422,7 +422,7 @@ def check_availability(request):
             booked_venue.append(dict(data)['venue'])
     
     print("BV===>",booked_venue)
-    venue_models = venue_model.objects.all()
+    venue_models = venue_model.objects.filter(capacity__gte=capacity)
     serializer_venue = venue_serializer(venue_models,many = True)
     venue_list = []
     
@@ -452,8 +452,9 @@ def check_availability(request):
         'start_time':start_time,
         'end_time':end_time,
         'func_days':func_days,
-        'session':session,
         'mailid':mail_id,
+        'internal_stud':internal_stud,
+        'external_stud':external_stud,
         'view_form':'view',
         })
 
@@ -512,10 +513,10 @@ def delete(request):
         end_time = request.POST.get('end_time')
         function_model.objects.filter(func_name = func_name,organizer_mail_id = mail_id,func_date = func_date).delete()
         booking_model.objects.filter(booking_date = func_date,venue = venue,starting_time = start_time,ending_time = end_time).delete()
-        doc_file = os.getcwd()+"\\static\\function_form\\function_documents\\"+func_name+".pdf"
+        doc_file = os.getcwd()+"\\static\\function_form\\function_documents\\"+func_name+"_"+func_date+".pdf"
         os.remove(doc_file)
         body = "The function form for the booking of "+venue+" on "+func_date+" were successfully deleted."
-        send_mail(sender=mail_id,func_name=func_name,msg_subject="Function form - "+func_name+" - Booking deleted",msg_body=body,msg_attachment="No")
+        send_mail(sender=mail_id,func_name=func_name,msg_subject="Function form - "+func_name+" - Booking deleted",msg_body=body,msg_attachment="No",func_date=func_date)
         function_models = function_model.objects.filter(organizer_mail_id = mail_id,status ='cancelled')
         serializer_function = function_serializer(function_models,many = True)
         func_list = []
@@ -533,7 +534,8 @@ def delete(request):
 
 def download(request):
         func_name = request.POST.get('func_name')
-        file_path = os.getcwd()+"\\static\\function_form\\function_documents\\"+func_name+".pdf"
+        func_date = request.POST.get('func_date')
+        file_path = os.getcwd()+"\\static\\function_form\\function_documents\\"+func_name+"_"+func_date+".pdf"
         if os.path.exists(file_path):
                 with open(file_path, 'rb') as fh:
                         response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
@@ -561,7 +563,6 @@ def submit(request):
         func_start_date=func_date
         func_end_date = request.POST.get('function_end_date')
         func_month = request.POST.get('func_on_month')
-        session = request.POST.get('func_session')
         # newly added end
         print("date--------->",func_date)
         func_days = int(request.POST.get('func_days'))
@@ -617,6 +618,8 @@ def submit(request):
         organizer_mail_id = request.POST.get('mail_id')
         organizer_name = request.POST.get('organizer_name')
         payment_through = request.POST.get('payment_through')
+        if(payment_through=="Others"):
+               payment_through = request.POST.get('payment_through_others')
         photography = request.POST.get('photography')
         if(photography=="Yes"):
                 photographer=request.POST.get('photographer')
@@ -695,8 +698,13 @@ def submit(request):
 
         type_of_mic = request.POST.get('type_of_mic')
         venue = request.POST.get('venue')
-        status = "waiting"
+
         remarks = "No remarks"
+
+        # Approval assignments
+        hod_status = "waiting"
+        status = "waiting"
+        principal_status = "waiting"
 
         named_tuple = time.localtime()
         print(named_tuple)
@@ -847,9 +855,9 @@ def submit(request):
                                 run.text = temp_str
         temp_file = doc.save(func_name+".docx")
         temp_file_path = os.getcwd()+"\\"+func_name+".docx"
-        convert(temp_file_path,os.getcwd()+"\\static\\function_form\\function_documents\\"+func_name+".pdf")
+        convert(temp_file_path,os.getcwd()+"\\static\\function_form\\function_documents\\"+func_name+"_"+func_date+".pdf")
         os.remove(temp_file_path)
-        doc_file = os.getcwd()+"\\static\\function_form\\function_documents\\"+func_name+".pdf"
+        doc_file = os.getcwd()+"\\static\\function_form\\function_documents\\"+func_name+"_"+func_date+".pdf"
         
         reg = function_model(
             ac_arrangement = ac_arrangement,
@@ -860,6 +868,7 @@ def submit(request):
             dias = dias,
             field_type = field_type,
             func_date = func_date,
+            func_end_date = func_end_date,
             func_days = func_days,
             func_name = func_name,
             func_students = func_students,
@@ -922,11 +931,13 @@ def submit(request):
             venue = venue,
             time_stamp = time_stamp,
             remarks = remarks,
+            hod_status = hod_status,
             status = status,
+            principal_status = principal_status,
             document_pdf = doc_file,
         )
 
-        preview_location = func_name + ".pdf" 
+        preview_location = func_name + "_" + func_date + ".pdf" 
 
         # print("Form action ====>>>",request.POST.get('form_action'))
         # doc_path = os.path.join(settings.BASE_DIR,'static/function_form/files/form.docx')
@@ -941,7 +952,7 @@ def submit(request):
                 msg_sub = "Function form - " + func_name + " - Booking Updated !!! "
                 msg_body = "The function form for booking "+venue+" on "+func_date+" were successfully updated."
                 mail_status = "not_sent"
-                if(send_mail(organizer_mail_id,func_name,msg_sub,msg_body,doc_file)):
+                if(send_mail(organizer_mail_id,func_name,msg_sub,msg_body,doc_file,func_date)):
                         mail_status = "sent"
                 reg.save()
                 # function_models = function_model.objects.all()
@@ -971,7 +982,6 @@ def submit(request):
         booking_end_date = func_end_date,
         starting_time = time_duration_start,
         ending_time = time_duration_end,
-        session = session,
         month = func_month,
         func_days = func_days,
         status = "waiting",
@@ -992,7 +1002,7 @@ def submit(request):
         msg_sub = "Function form - " + func_name + " - Booking submitted"
         msg_body = "The function form for booking "+venue+" on "+func_date+" were successfully submitted for approval."
         mail_status = "not_sent"
-        if(send_mail(organizer_mail_id,func_name,msg_sub,msg_body,doc_file)):
+        if(send_mail(organizer_mail_id,func_name,msg_sub,msg_body,doc_file,func_date)):
                 mail_status = "sent"
 
 
