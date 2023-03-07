@@ -22,7 +22,7 @@
 </head>
 
 
-<body>
+<body style="position:relative;z-index:1;">
 
 <div style="height:220px; width:100%; background: #12539B; margin:0 auto;">
 <h1 style="text-align: center; color:white"><img src="{% static 'function_form/' %}images/ngp-itech-logo.png" style="max-height: 80px;max-width: 80px;">Dr. N.G.P. Institute of Technology<br><div><h4>(An Autonomous Institution)</h4></div>
@@ -156,7 +156,7 @@
 
 {% if mail_status == "sent" %}
 
-<div class="alert alert-success" name="success" id="success" role="alert" style="margin:0 auto; max-width:600px;text-align:center;">
+<div class="alert alert-success" name="success" id="popup_success" role="alert" style="margin:0 auto; max-width:600px;text-align:center;">
   <strong>Function form update was sucessfull !!!</strong>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
@@ -308,7 +308,7 @@
 
             <div class="mb-3">
               <label for="func_date" class="for">Ending Date</label>
-              <input type="date" class="form-control mb-3" Name="func_date" id="func_end_date" value={{f.func_end_date}} readonly >
+              <input type="date" class="form-control mb-3" Name="function_end_date" id="function_end_date" value={{f.func_end_date}} readonly >
             </div>
 
             
@@ -520,7 +520,7 @@
 
                   <div class="form-group col-md-4">
                     <label for="guest_house_from_date" class="form-label">From date</label>
-                    <input type="date" class="form-control" id="guest_house_from_date" name="guest_house_from_date">
+                    <input type="date" class="form-control" id="guest_house_from_date" name="guest_house_from_date" {% if f.guest_house_from_date != "---" %} value="{{f.guest_house_from_date}}" {% endif %}>
                     <div class="invalid-feedback">Choose date</div>
                     <div class="feedback"><p id="custom-feedback"></p></div>
                     <div class="valid-feedback">Looks good!</div>
@@ -528,14 +528,14 @@
 
                   <div class="form-group col-md-4">
                     <label for="guest_house_to_date" class="form-label">To date</label>
-                    <input type="date" class="form-control" id="guest_house_to_date" name="guest_house_to_date">
+                    <input type="date" class="form-control" id="guest_house_to_date" name="guest_house_to_date" {% if f.guest_house_to_date != "---"  %} value="{{f.guest_house_to_date}}" {% endif %}>
                     <div class="invalid-feedback">Choose date</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
 
                   <div class="form-group col-md-4">
                     <label for="guest_house_days" class="form-label">Number of days</label>
-                    <input type="number" class="form-control" id="guest_house_days" name="guest_house_days" readonly>
+                    <input type="number" class="form-control" id="guest_house_days" name="guest_house_days" {% if f.guest_house_days != "0" %} value="{{f.guest_house_days}}" {% endif %} readonly>
                     <div class="invalid-feedback">Enter number of days</div>
                     <div class="valid-feedback">Looks good!</div>
                   </div>
@@ -1362,7 +1362,7 @@
   }
 
   document.getElementById("guest_house_from_date").addEventListener('input',()=>{
-    const func_end_date = document.getElementById("func_end_date").value;
+    const func_end_date = document.getElementById("function_end_date").value;
     const choosen_date = document.getElementById("guest_house_from_date").value;
     const to_date = document.getElementById("guest_house_to_date").value;
     if((choosen_date>func_end_date)){
@@ -1384,7 +1384,7 @@
 });
 
 document.getElementById("guest_house_to_date").addEventListener('input',()=>{
-  const func_end_date = document.getElementById("func_end_date").value;
+  const func_end_date = document.getElementById("function_end_date").value;
   const start_date = document.getElementById("guest_house_from_date").value;
   const choosen_date = document.getElementById("guest_house_to_date").value;
   if((choosen_date>func_end_date) | (choosen_date<start_date)){

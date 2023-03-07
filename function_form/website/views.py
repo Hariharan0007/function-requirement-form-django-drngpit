@@ -560,7 +560,7 @@ def submit(request):
         field_type = request.POST.get('field_type')
         func_date = request.POST.get('func_date')
         # newly added start
-        func_start_date=func_date
+        # func_start_date=func_date
         func_end_date = request.POST.get('function_end_date')
         func_month = request.POST.get('func_on_month')
         # newly added end
