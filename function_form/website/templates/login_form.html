@@ -141,9 +141,9 @@
             {% csrf_token %}
             <div class="mb-3">
               <label for="staff_mail_id" class="for">Enter mail id</label>
-              <input type="email" class="form-control mb-3" Name="staff_mail_id" required>
+              <input type="email" class="form-control mb-3" Name="staff_mail_id" pattern=".+@drngpit\.ac\.in" required>
               <div class="valid-feedback">Looks good!</div>
-              <div class="invalid-feedback">Enter mail id</div>
+              <div class="invalid-feedback">Enter your organisational mail id</div>
             </div>
             <div class="mb-3">
               <label for="old_password" class="for">Enter old password</label>

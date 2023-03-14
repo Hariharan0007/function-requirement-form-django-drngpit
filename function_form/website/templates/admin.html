@@ -122,9 +122,9 @@
         <div class="container-sm">
           {% csrf_token %}
         <div class="mx-5 mb-3">
-          <label for="add_staff_mail_id" class="form-label">Staff Mail-id</label>
-          <input type="email" class="form-control" name="add_staff_mail_id" id="add_staff_mail_id" required>
-          <div class="invalid-feedback">Enter mail-id</div>
+          <label for="add_staff_mail_id" class="form-label">Staff Mail-id<small>&nbsp;&nbsp;&nbsp; Ex:abc@drngpit.ac.in</small></label>
+          <input type="email" class="form-control" name="add_staff_mail_id" id="add_staff_mail_id" pattern=".+@drngpit\.ac\.in" required>
+          <div class="invalid-feedback">Enter Organisation mail-id</div>
         </div>
                   
           <div class="mx-5 mb-3">

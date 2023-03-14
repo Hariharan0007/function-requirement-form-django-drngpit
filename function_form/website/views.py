@@ -470,7 +470,7 @@ def add_new(request):
                 )
                 add_staff_reg.save()
                 body = "You were successfully added to function form user,Your code is " + staff_code +".Change this to your own custom password in your first login."
-                send_mail(sender=staff_mail,func_name="Nil",msg_subject="Function form - Successfully added",msg_body=body,msg_attachment="No")
+                send_mail(sender=staff_mail,func_name="Nil",msg_subject="Function form - Successfully added",msg_body=body,msg_attachment="No",func_date="")
                 mailid = request.POST.get('mail_id')
                 print(mailid)
                 func_list = function_list()
